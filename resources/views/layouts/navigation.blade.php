@@ -19,6 +19,9 @@
                     <x-nav-link :href="route('inventories.index')" :active="request()->routeIs('inventories.index')">
                         {{ __('検索') }}
                     </x-nav-link>
+
+
+
                     <x-nav-link :href="route('inventories.input')" :active="request()->routeIs('inventories.input')">
                         {{ __('食材入力フォーム') }}
                     </x-nav-link>
@@ -81,7 +84,10 @@
             <!-- 🔽 1項目追加 -->
             <x-responsive-nav-link :href="route('inventories.index')" :active="request()->routeIs('inventories.index')">
                 {{ __('検索') }}
-                </x-responsive-nav-link>
+
+            </x-responsive-nav-link>
+
+
 
             <x-responsive-nav-link :href="route('inventories.input')" :active="request()->routeIs('inventories.input')">
                 {{ __('食材入力フォーム') }}
