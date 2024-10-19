@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "google-gemini-php/laravel": "^1.0",
         "laravel/framework": "^11.9",
         "laravel/tinker": "^2.9",
         "openai-php/laravel": "^0.10.1"
