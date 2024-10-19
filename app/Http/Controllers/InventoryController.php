@@ -62,4 +62,10 @@ class InventoryController extends Controller
     {
         //
     }
+
+    public function input()
+  {
+    // 
+    return view('inventories.input');
+  }
 }
