@@ -17,24 +17,14 @@
                     </x-nav-link>
                     <x-nav-link :href="route('inventories.stock')" :active="request()->routeIs('inventories.stock')">
                         {{ __('在庫入力フォーム') }}
-
-                    <x-nav-link :href="route('inventories.index')" :active="request()->routeIs('inventories.index')">
-                        {{ __('検索') }}
-
-                    <x-nav-link :href="route('inventories.input')" :active="request()->routeIs('inventories.input')">
-                        {{ __('食材入力フォーム') }}
-
                     </x-nav-link>
 
                     <x-nav-link :href="route('inventories.index')" :active="request()->routeIs('inventories.index')">
                         {{ __('検索') }}
+                    </x-nav-link>
 
                     <x-nav-link :href="route('inventories.input')" :active="request()->routeIs('inventories.input')">
                         {{ __('食材入力フォーム') }}
-
-                    </x-nav-link>
-                    <x-nav-link :href="route('inventories.stock')" :active="request()->routeIs('inventories.stock')">
-                        {{ __('在庫入力フォーム') }}
                     </x-nav-link>
                 </div>
             </div>
@@ -91,19 +81,20 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+
             <x-responsive-nav-link :href="route('inventories.stock')" :active="request()->routeIs('inventories.stock')">
                 {{ __('在庫入力フォーム') }}
+            </x-responsive-nav-link>
 
             <!-- 🔽 1項目追加 -->
             <x-responsive-nav-link :href="route('inventories.index')" :active="request()->routeIs('inventories.index')">
                 {{ __('検索') }}
+            </x-responsive-nav-link>
 
             <x-responsive-nav-link :href="route('inventories.input')" :active="request()->routeIs('inventories.input')">
                 {{ __('食材入力フォーム') }}
-
             </x-responsive-nav-link>
         </div>
-        
 
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
