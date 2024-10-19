@@ -9,4 +9,14 @@ class Inventory extends Model
 {
     /** @use HasFactory<\Database\Factories\InventoryFactory> */
     use HasFactory;
+
+    protected $fillable = [
+        'name',
+        'stock',
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
