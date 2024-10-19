@@ -10,6 +10,14 @@ class InventoryController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+     public function input(Request $request)
+    {
+        
+        $inventories = Inventory::all(); 
+        return view('inventories.input', compact('inventories')); 
+    }
+
     public function index()
     {
         //
@@ -63,9 +71,5 @@ class InventoryController extends Controller
         //
     }
 
-    public function input()
-  {
-    // 
-    return view('inventories.input');
-  }
+    
 }

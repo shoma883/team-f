@@ -23,7 +23,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/inventories', [GeminiController::class, 'entry'])->name('entry');
 
 
-    Route::resource('inventories', InventoryController::class);
+    Route::get('/inventories', [InventoryController::class, 'index'])->name('inventories.index');
+    Route::get('inventories/input', [InventoryController::class, 'input']);
+    Route::post('/inventories/input', [InventoryController::class, 'input'])->name('inventories.input');
+
     Route::get('/inventories/input', [InventoryController::class, 'input'])->name('inventories.input');
 
  
