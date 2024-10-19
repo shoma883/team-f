@@ -19,8 +19,8 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::get('/inventories', [GeminiController::class, 'index'])->name('inventories.index');
-    Route::post('/inventories', [GeminiController::class, 'entry'])->name('entry');
+    Route::get('/gemini', [GeminiController::class, 'index'])->name('gemini.index');
+    Route::post('/gemini', [GeminiController::class, 'entry'])->name('entry');
 
     Route::get('/inventories/input', [InventoryController::class, 'input'])->name('inventories.input');
 

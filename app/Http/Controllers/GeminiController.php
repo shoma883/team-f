@@ -11,7 +11,7 @@ class GeminiController extends Controller
 {
     public function index()
     {
-        return view('inventories.index');
+        return view('gemini.index');
     }
 
     public function entry(Request $request)
@@ -20,7 +20,17 @@ class GeminiController extends Controller
         $searchQuery = $request->toGeminiText;
 
         // GeminiAIに渡すプロンプトを生成
-        $toGeminiCommand = "料理を提案してください '{$searchQuery}'。材料を個数のみでリストしてください。";
+        $toGeminiCommand = "料理名とその食材、個数をJSON形式で出力してください。'{$searchQuery}'。すべての数量は**数値のみ**で、単位は表示しないでください。以下の形式で返答してください:
+
+        {
+            \"料理名\": \"料理名\",
+            \"材料\": [
+                { \"材料名\": \"材料1\", \"個数\": 数量 },
+                { \"材料名\": \"材料2\", \"個数\": 数量 }
+            ]
+        }
+        ";
+
 
         // GeminiAIからのレスポンスを取得
         $responseText = Gemini::geminiPro()->generateContent($toGeminiCommand)->text();
@@ -28,10 +38,12 @@ class GeminiController extends Controller
         // 必要に応じてMarkdown形式に変換（Markdown形式で整形したい場合）
         $result = [
             'task' => $searchQuery,
-            'content' => Str::markdown($responseText),
+            'content' => ($responseText),
         ];
+        
+        dd($result);
 
         // ビューに結果を渡して表示
-        return view('inventories.index', compact('result'));
+        return view('gemini.index', compact('result'));
     }
 }
