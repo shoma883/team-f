@@ -14,6 +14,7 @@ return new class extends Migration
 		Schema::create('inventories', function (Blueprint $table) {
 			$table->id();
 			$table->string('name');
+			$table->string('inventory');
 			$table->integer('stock');
 			$table->foreignId('user_id')->constrained()->cascadeOnDelete();
 			$table->timestamps();
