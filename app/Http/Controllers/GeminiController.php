@@ -19,8 +19,9 @@ class GeminiController extends Controller
     // ユーザーからの入力（例：「簡単な料理」など）
     $searchQuery = $request->toGeminiText;
 
+
     // GeminiAIに渡すプロンプトを生成
-    $toGeminiCommand = "料理名とその食材、個数をJSON形式で5つ分出力してください。'{$searchQuery}'。すべての数量は**整数のみ**で、調味料は含めないでください。単位は表示しないでください。以下の形式で返答してください:
+    $toGeminiCommand = "料理名とその食材、個数をJSON形式で5つ分出力してください。'{$searchQuery}'。すべての数量は**整数のみ**で、調味料は含めないでください。単位は表示しないでください。以下の形式で返答してください。
         {
             \"料理\": [
                 {
@@ -59,7 +60,8 @@ class GeminiController extends Controller
                     ]
                 }
             ]
-        }";
+        }
+        ";
 
     //GeminiAIからのレスポンスを取得
     $responseText = Gemini::geminiPro()->generateContent($toGeminiCommand)->text();
@@ -69,8 +71,14 @@ class GeminiController extends Controller
       'content' => ($responseText),
     ];
 
-    // JSONデコード
-    $dishes = json_decode($result['content'], true);
+    // バッククォートを取り除く
+    $cleanedContent = str_replace(['```', '```'], '', $result['content']);
+
+    // 不要な部分を削除
+    $cleanedContent = str_replace('json', '', $cleanedContent);
+
+    // JSON形式に変換
+    $dishes = json_decode($cleanedContent, true);
 
     // デコード結果を確認
     if (json_last_error() !== JSON_ERROR_NONE) {
@@ -79,6 +87,18 @@ class GeminiController extends Controller
 
     // ビューに結果を渡して表示
     return view('gemini.index', compact('dishes'));
+
+    // GeminiAIからのレスポンスを取得
+    $responseText = Gemini::geminiPro()->generateContent($toGeminiCommand)->text();
+
+    // 必要に応じてMarkdown形式に変換（Markdown形式で整形したい場合）
+    $result = [
+      'task' => $searchQuery,
+      'content' => ($responseText),
+    ];
+
+    // ビューに結果を渡して表示
+    return view('gemini.index', compact('result'));
   }
 
   public function save(Request $request)
