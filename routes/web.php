@@ -46,7 +46,7 @@ Route::middleware('auth')->group(function () {
 	Route::get('/gemini/inventory', [GeminiController::class, 'inventory'])->name('gemini.inventory');
 	Route::post('/gemini/save', [GeminiController::class, 'save'])->name('gemini.save');
 
-	Route::get('/history', [HistoryController::class, 'index'])->name('history.index');
+	Route::get('/histories', [HistoryController::class, 'index'])->name('histories.index');
 });
 
 require __DIR__ . '/auth.php';

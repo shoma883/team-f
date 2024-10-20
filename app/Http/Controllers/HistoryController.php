@@ -13,7 +13,7 @@ class HistoryController extends Controller
   public function index()
   {
     $histories = History::where('user_id', auth()->id())->get();
-    return view('history.index', compact('histories'));
+    return view('histories.index', compact('histories'));
   }
 
   /**
