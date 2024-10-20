@@ -11,19 +11,24 @@ class InventoryController extends Controller
      * Display a listing of the resource.
      */
 
-     public function input(Request $request)
+     public function input()
     {
+        //
         
-        if ($request->isMethod('post')) {
-        // POSTリクエストの場合、食材を追加
+    }
+
+    public function index(Request $request)
+    {
+       // POSTリクエストの場合
+    if ($request->isMethod('post')) {
+        // 食材のバリデーション
         $request->validate([
-            'tweet' => 'required|string|max:255',
+            'inventory' => 'required|string|max:255',
         ]);
 
         // 新しい食材をデータベースに保存
         $inventory = new Inventory();
-        $inventory->inventory = $request->input('tweet');
-        $inventory->user_id = $request->user()->id;
+        $inventory->name = $request->input('inventory');
         $inventory->save();
 
         // 保存した食材をJSONで返す
@@ -32,14 +37,9 @@ class InventoryController extends Controller
 
     // GETリクエストの場合、食材一覧を返す
     $inventories = Inventory::all();
-    return view('inventories.input', [
+    return view('inventories.index', [ // ビュー名を `inventories.index` に変更
         'inventories' => $inventories
     ]);
-    }
-
-    public function index()
-    {
-        //
     }
 
     /**
@@ -55,7 +55,13 @@ class InventoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        DB::table('inventories')->insert([
+            'name' => 'いも',
+            'inventory' => 0, // または適切な値を指定
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+         return redirect()->back()->with('success', '在庫が追加されました。');
     }
 
     /**
