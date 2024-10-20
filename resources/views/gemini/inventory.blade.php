@@ -9,12 +9,11 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
-                    <h3 class="text-lg font-semibold">料理名: {{ $dish }}</h3> <!-- 料理名を表示 -->
+                    <h3 class="text-lg font-semibold">料理名: {{ $selectedRecipe['料理名'] }}</h3> <!-- 料理名を表示 -->
 
-                    <form action="{{ route('gemini.inventory') }}" method="POST">
                         @csrf
                         <ul>
-                            @foreach ($ingredients as $ingredient)
+                            @foreach ($selectedRecipe['材料'] as $ingredient)
                                 <li>
                                     {{ $ingredient['材料名'] }}:
                                     <span>初期数 <input type="number" name="initial_count[{{ $ingredient['材料名'] }}]" value="{{ $ingredient['個数'] }}" readonly /></span>
@@ -24,7 +23,6 @@
                             @endforeach
                         </ul>
                         <button type="submit" class="mt-4 bg-blue-500 text-white font-bold py-2 px-4 rounded">入力</button>
-                    </form>
                 </div>
             </div>
         </div>
