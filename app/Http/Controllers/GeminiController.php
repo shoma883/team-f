@@ -78,7 +78,7 @@ class GeminiController extends Controller
     $cleanedContent = str_replace('json', '', $cleanedContent);
     //dd($cleanedContent);
 
-    // JSON形式に変換
+    // 配列にデコード
     $dishes = json_decode($cleanedContent, true);
 
     // デコード結果を確認
