@@ -87,7 +87,7 @@
 
         $.ajax({
             type: 'PUT',
-            url: '/inventory/' + inventoryID, // 適切な更新URLを設定
+            url: '/inventory/' + inventoryId+ '/update' ,// 適切な更新URLを設定
             data: {
                 stock: stockValue,
                 _token: '{{ csrf_token() }}', // CSRFトークンを送信
