@@ -32,7 +32,7 @@ Route::middleware('auth')->group(function () {
 
 	Route::get('/gemini', [GeminiController::class, 'index'])->name('gemini.index');
 	Route::post('/gemini', [GeminiController::class, 'entry'])->name('entry');
-	
+  Route::resource('inventory', InventoryController::class);	
 
 	Route::resource('inventories', InventoryController::class);
 
