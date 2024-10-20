@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Inventory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class InventoryController extends Controller
 {
@@ -11,19 +12,27 @@ class InventoryController extends Controller
      * Display a listing of the resource.
      */
 
-     public function input(Request $request)
+     public function input()
     {
+        //
         
-        if ($request->isMethod('post')) {
-        // POSTリクエストの場合、食材を追加
+    }
+
+    public function index(Request $request)
+    {
+       // POSTリクエストの場合
+    if ($request->isMethod('post')) {
+        // 食材のバリデーション
         $request->validate([
-            'tweet' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
+            'stock' => 'required|integer',
         ]);
 
         // 新しい食材をデータベースに保存
         $inventory = new Inventory();
-        $inventory->inventory = $request->input('tweet');
-        $inventory->user_id = $request->user()->id;
+        $inventory->name = $request->input('name');
+        $inventory->stock = $request->input('stock');
+        $inventory->user_id = auth()->id();
         $inventory->save();
 
         // 保存した食材をJSONで返す
@@ -32,14 +41,9 @@ class InventoryController extends Controller
 
     // GETリクエストの場合、食材一覧を返す
     $inventories = Inventory::all();
-    return view('inventories.input', [
+    return view('inventories.index', [ 
         'inventories' => $inventories
     ]);
-    }
-
-    public function index()
-    {
-        //
     }
 
     /**
@@ -55,7 +59,22 @@ class InventoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'stock' => 'required|integer', 
+        ]);
+
+        DB::table('inventories')->insert([
+            'name' => $request->input('name'), 
+            'stock' => $request->input('stock'), 
+            'user_id' => auth()->id(), 
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+         dd($data);
+          DB::table('inventories')->insert($data);
+         return redirect()->back()->with('success', '在庫が追加されました。');
     }
 
     /**

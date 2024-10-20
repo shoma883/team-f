@@ -19,15 +19,27 @@ Route::middleware('auth')->group(function () {
 	Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
 	Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-	// Inventory Routes =================================================================================
-	Route::resource('inventories', InventoryController::class);
-	Route::get('/inventories', [InventoryController::class, 'index'])->name('inventories.index');
-	Route::post('/inventories/input', [InventoryController::class, 'input'])->name('inventories.input');
-	Route::get('/inventories/stock', [InventoryController::class, 'stock'])->name('inventories.stock');
-	Route::get('/inventories/input', [InventoryController::class, 'input'])->name('inventories.input');
-	Route::get('/inventories/show', [InventoryController::class, 'show'])->name('inventories.show');
 
-	// Gemini Routes ====================================================================================
+    
+  Route::get('/inventories', [InventoryController::class, 'index'])->name('inventories.index');
+  Route::get('inventories/index', [InventoryController::class, 'index']);
+  Route::post('/inventories/index', [InventoryController::class, 'index'])->name('inventories.index');
+
+ 
+  Route::resource('inventories', InventoryController::class);
+
+  Route::get('/inventories/index', [InventoryController::class, 'index'])->name('inventories.index');
+
+	Route::get('/gemini', [GeminiController::class, 'index'])->name('gemini.index');
+	Route::post('/gemini', [GeminiController::class, 'entry'])->name('entry');
+	
+
+	Route::resource('inventories', InventoryController::class);
+
+	Route::get('/inventories/show', [InventoryController::class, 'show'])->name('inventories.show');
+  Route::post('/inventory/store', [InventoryController::class, 'store'])->name('inventory.store');
+
+
 	Route::get('/gemini', [GeminiController::class, 'index'])->name('gemini.index');
 	Route::post('/gemini', [GeminiController::class, 'entry'])->name('gemini.entry');
 	Route::get('/gemini/inventory', [GeminiController::class, 'inventory'])->name('gemini.inventory');
