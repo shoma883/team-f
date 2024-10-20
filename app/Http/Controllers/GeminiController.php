@@ -76,6 +76,7 @@ class GeminiController extends Controller
 
     // 不要な部分を削除
     $cleanedContent = str_replace('json', '', $cleanedContent);
+    //dd($cleanedContent);
 
     // JSON形式に変換
     $dishes = json_decode($cleanedContent, true);
@@ -131,15 +132,11 @@ class GeminiController extends Controller
     return back()->with('error', 'レシピの保存に失敗しました。選択された料理が見つかりませんでした。');
   }
 
-  public function inventory(Request $request)
-  {
-    // クエリパラメータから料理名と材料リストを取得
-    $dish = $request->input('dish');
-    $ingredients = json_decode($request->input('ingredients'), true);
-
-    // ビューにデータを渡す
-    return view('gemini.inventory', compact('dish', 'ingredients'));
-  }
+//   public function inventory(Request $request)
+//   {
+//     // ビューにデータを渡す
+//     return view('gemini.inventory', compact('dish', 'ingredients'));
+//   }
 
 }
 
