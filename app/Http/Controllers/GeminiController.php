@@ -19,14 +19,8 @@ class GeminiController extends Controller
     // ユーザーからの入力（例：「簡単な料理」など）
     $searchQuery = $request->toGeminiText;
 
-
-        // GeminiAIに渡すプロンプトを生成
-        $toGeminiCommand = "料理名とその食材、個数をJSON形式で5つ分出力してください。'{$searchQuery}'。すべての数量は**整数のみ**で、調味料は含めないでください。単位は表示しないでください。以下の形式で返答してください:
-
     // GeminiAIに渡すプロンプトを生成
-    $toGeminiCommand = "料理名とその食材、個数をJSON形式で出力してください。'{$searchQuery}'。すべての数量は**数値のみ**で、単位は表示しないでください。以下の形式で返答してください:
-
-
+    $toGeminiCommand = "料理名とその食材、個数をJSON形式で5つ分出力してください。'{$searchQuery}'。すべての数量は**整数のみ**で、調味料は含めないでください。単位は表示しないでください。以下の形式で返答してください:
         {
             \"料理\": [
                 {
@@ -67,52 +61,29 @@ class GeminiController extends Controller
             ]
         }";
 
-
-
-        
-        //GeminiAIからのレスポンスを取得
-         
-        $responseText = Gemini::geminiPro()->generateContent($toGeminiCommand)->text();
-        //dd($responseText);
-
-        $result = [
-            'task' => $searchQuery,
-            'content' => ($responseText),
-        ];
-
-        //($result);
-
-
-        // JSONデコード
-        
-        $dishes = json_decode($result['content'], true);
-
-        // デコード結果を確認
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            dd('JSONエラー: ' . json_last_error_msg());
-        }
-
-        // ビューに結果を渡して表示
-        return view('gemini.index', compact('dishes'));
-
-    // GeminiAIからのレスポンスを取得
+    //GeminiAIからのレスポンスを取得
     $responseText = Gemini::geminiPro()->generateContent($toGeminiCommand)->text();
 
-    // 必要に応じてMarkdown形式に変換（Markdown形式で整形したい場合）
     $result = [
       'task' => $searchQuery,
       'content' => ($responseText),
     ];
 
-    dd($result);
+    // JSONデコード
+    $dishes = json_decode($result['content'], true);
+
+    // デコード結果を確認
+    if (json_last_error() !== JSON_ERROR_NONE) {
+      dd('JSONエラー: ' . json_last_error_msg());
+    }
 
     // ビューに結果を渡して表示
-    return view('gemini.index', compact('result'));
+    return view('gemini.index', compact('dishes'));
   }
 
   public function save(Request $request)
   {
-    $recipes = json_encode($request->input('recipes'), true);
+    $recipes = json_decode($request->input('recipes'), true);
     $selectedIndex = $request->input('selected_recipe');
 
     $selectedRecipe = $recipes[$selectedIndex];
@@ -125,7 +96,6 @@ class GeminiController extends Controller
       ]);
 
       return redirect()->route('gemini.index')->with('success', '選択したレシピを保存しました。');
-
     }
 
     return back()->with('error', 'レシピの保存に失敗しました。');
