@@ -35,7 +35,7 @@ Route::middleware('auth')->group(function () {
   Route::resource('inventory', InventoryController::class);	
 
 	Route::resource('inventories', InventoryController::class);
-
+  Route::put('/inventory/{id}/update', [InventoryController::class, 'update'])->name('inventory.update');
 	Route::get('/inventories/show', [InventoryController::class, 'show'])->name('inventories.show');
   Route::post('/inventory/store', [InventoryController::class, 'store'])->name('inventory.store');
 

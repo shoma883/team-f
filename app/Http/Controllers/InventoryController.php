@@ -98,13 +98,13 @@ class InventoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Inventory $inventory)
+    public function update(Request $request, Inventory $inventory, $id)
     {
         $request->validate([
-        'stock' => 'required|integer',
+        'stock' => 'required|integer|min:0',
     ]);
 
-    
+      $inventory = Inventory::findOrFail($id);
       $inventory->stock = $request->input('stock');
       $inventory->save();
 
