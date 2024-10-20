@@ -9,7 +9,11 @@ class History extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'ingredients'];
+    protected $fillable = [
+        'name',
+        'ingredients',
+        'user_id'
+    ];
 
     public function user()
     {

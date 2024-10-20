@@ -12,7 +12,7 @@
           <form id="ingredient-form" method="POST" action="{{ route('inventory.store') }}">
             @csrf
             <div class="mb-4">
-              <label for="inventory" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">食材</label>
+              <label for="name" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">食材</label>
               <input type="text" name="name" id="name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline">
               <input type="number" id="stock" name="stock" required>
               @error('name')
@@ -66,7 +66,6 @@
             $('#stock').val(''); 
           },
           error: function(xhr) {
-            // エラーハンドリング
             if (xhr.responseJSON && xhr.responseJSON.message) {
               alert('エラーが発生しました: ' + xhr.responseJSON.message);
             } else {
