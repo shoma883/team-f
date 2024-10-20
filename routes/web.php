@@ -18,9 +18,14 @@ Route::middleware('auth')->group(function () {
 	Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
 	Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
 	Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    
+    Route::resource('inventories', InventoryController::class);
+    Route::get('/inventories/stock', [InventoryController::class, 'stock'])->name('inventories.stock');
+    Route::get('/inventories/input', [InventoryController::class, 'input'])->name('inventories.input');
 
 	Route::get('/gemini', [GeminiController::class, 'index'])->name('gemini.index');
 	Route::post('/gemini', [GeminiController::class, 'entry'])->name('entry');
+
 
 
   Route::get('/inventories', [InventoryController::class, 'index'])->name('inventories.index');
@@ -31,6 +36,11 @@ Route::middleware('auth')->group(function () {
 
  
 	Route::get('/inventories/input', [InventoryController::class, 'input'])->name('inventories.input');
+
+    Route::get('/inventories/input', [InventoryController::class, 'input'])->name('inventories.input');
+
+ 
+
 });
 
 require __DIR__ . '/auth.php';
