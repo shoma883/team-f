@@ -103,7 +103,7 @@ class GeminiController extends Controller
 
   public function save(Request $request)
   {
-    $recipes = json_decode($request->input('recipes'), true);
+    $recipes = json_encode($request->input('recipes'), true);
     $selectedIndex = $request->input('selected_recipe');
 
     $selectedRecipe = $recipes[$selectedIndex];
