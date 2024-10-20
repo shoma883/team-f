@@ -14,8 +14,27 @@ class InventoryController extends Controller
      public function input(Request $request)
     {
         
-        $inventories = Inventory::all(); 
-        return view('inventories.input', compact('inventories')); 
+        if ($request->isMethod('post')) {
+        // POSTリクエストの場合、食材を追加
+        $request->validate([
+            'tweet' => 'required|string|max:255',
+        ]);
+
+        // 新しい食材をデータベースに保存
+        $inventory = new Inventory();
+        $inventory->inventory = $request->input('tweet');
+        $inventory->user_id = $request->user()->id;
+        $inventory->save();
+
+        // 保存した食材をJSONで返す
+        return response()->json(['inventory' => $inventory->inventory]);
+    }
+
+    // GETリクエストの場合、食材一覧を返す
+    $inventories = Inventory::all();
+    return view('inventories.input', [
+        'inventories' => $inventories
+    ]);
     }
 
     public function index()
