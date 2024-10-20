@@ -22,18 +22,15 @@ Route::middleware('auth')->group(function () {
 	Route::get('/gemini', [GeminiController::class, 'index'])->name('gemini.index');
 	Route::post('/gemini', [GeminiController::class, 'entry'])->name('entry');
 
-<<<<<<< HEAD
 
-    Route::get('/inventories', [InventoryController::class, 'index'])->name('inventories.index');
-    Route::get('inventories/input', [InventoryController::class, 'input']);
-    Route::post('/inventories/input', [InventoryController::class, 'input'])->name('inventories.input');
+  Route::get('/inventories', [InventoryController::class, 'index'])->name('inventories.index');
+  Route::get('inventories/input', [InventoryController::class, 'input']);
+  Route::post('/inventories/input', [InventoryController::class, 'input'])->name('inventories.input');
 
-    Route::get('/inventories/input', [InventoryController::class, 'input'])->name('inventories.input');
+  Route::get('/inventories/input', [InventoryController::class, 'input'])->name('inventories.input');
 
  
-=======
 	Route::get('/inventories/input', [InventoryController::class, 'input'])->name('inventories.input');
->>>>>>> eff47b0d001123a0cc89778f22169deefa11e664
 });
 
 require __DIR__ . '/auth.php';
