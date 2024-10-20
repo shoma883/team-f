@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Inventory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class InventoryController extends Controller
 {
@@ -23,12 +24,15 @@ class InventoryController extends Controller
     if ($request->isMethod('post')) {
         // 食材のバリデーション
         $request->validate([
-            'inventory' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
+            'stock' => 'required|integer',
         ]);
 
         // 新しい食材をデータベースに保存
         $inventory = new Inventory();
-        $inventory->name = $request->input('inventory');
+        $inventory->name = $request->input('name');
+        $inventory->stock = $request->input('stock');
+        $inventory->user_id = auth()->id();
         $inventory->save();
 
         // 保存した食材をJSONで返す
@@ -37,7 +41,7 @@ class InventoryController extends Controller
 
     // GETリクエストの場合、食材一覧を返す
     $inventories = Inventory::all();
-    return view('inventories.index', [ // ビュー名を `inventories.index` に変更
+    return view('inventories.index', [ 
         'inventories' => $inventories
     ]);
     }
@@ -55,12 +59,21 @@ class InventoryController extends Controller
      */
     public function store(Request $request)
     {
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'stock' => 'required|integer', 
+        ]);
+
         DB::table('inventories')->insert([
-            'name' => 'いも',
-            'inventory' => 0, // または適切な値を指定
+            'name' => $request->input('name'), 
+            'stock' => $request->input('stock'), 
+            'user_id' => auth()->id(), 
             'created_at' => now(),
             'updated_at' => now(),
         ]);
+         dd($data);
+          DB::table('inventories')->insert($data);
          return redirect()->back()->with('success', '在庫が追加されました。');
     }
 
