@@ -16,9 +16,10 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
 
-                    <x-nav-link :href="route('gemini.index')" :active="request()->routeIs('inventories.index')">
+                    <x-nav-link :href="route('gemini.index')" :active="request()->routeIs('gemini.index')">
                         {{ __('検索') }}
                     </x-nav-link>
+
                     
                     <x-nav-link :href="route('inventories.index')" :active="request()->routeIs('inventories.index')">
                         {{ __('食材入力フォーム') }}
@@ -80,9 +81,10 @@
             </x-responsive-nav-link>
 
             <!-- 🔽 1項目追加 -->
-            <x-responsive-nav-link :href="route('gemini.index')" :active="request()->routeIs('inventories.index')">
+            <x-responsive-nav-link :href="route('gemini.index')" :active="request()->routeIs('gemini.index')">
                 {{ __('検索') }}
             </x-responsive-nav-link>
+
 
             <x-responsive-nav-link :href="route('inventories.index')" :active="request()->routeIs('inventories.index')">
                 {{ __('食材入力フォーム') }}

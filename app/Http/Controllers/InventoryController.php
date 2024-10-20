@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\Inventory;
@@ -12,38 +11,37 @@ class InventoryController extends Controller
      * Display a listing of the resource.
      */
 
-     public function input()
+    public function input()
     {
-        //
-        
+        // インプット用の処理
     }
 
     public function index(Request $request)
     {
-       // POSTリクエストの場合
-    if ($request->isMethod('post')) {
-        // 食材のバリデーション
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'stock' => 'required|integer',
+        // POSTリクエストの場合
+        if ($request->isMethod('post')) {
+            // 食材のバリデーション
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'stock' => 'required|integer',
+            ]);
+
+            // 新しい食材をデータベースに保存
+            $inventory = new Inventory();
+            $inventory->name = $request->input('name');
+            $inventory->stock = $request->input('stock');
+            $inventory->user_id = auth()->id();
+            $inventory->save();
+
+            // 保存した食材をJSONで返す
+            return response()->json(['inventory' => $inventory]);
+        }
+
+        // GETリクエストの場合、食材一覧を返す
+        $inventories = Inventory::all();
+        return view('inventories.index', [ 
+            'inventories' => $inventories
         ]);
-
-        // 新しい食材をデータベースに保存
-        $inventory = new Inventory();
-        $inventory->name = $request->input('name');
-        $inventory->stock = $request->input('stock');
-        $inventory->user_id = auth()->id();
-        $inventory->save();
-
-        // 保存した食材をJSONで返す
-        return response()->json(['inventory' => $inventory->inventory]);
-    }
-
-    // GETリクエストの場合、食材一覧を返す
-    $inventories = Inventory::all();
-    return view('inventories.index', [ 
-        'inventories' => $inventories
-    ]);
     }
 
     /**
@@ -51,7 +49,7 @@ class InventoryController extends Controller
      */
     public function create()
     {
-        //
+        // 作成用の処理
     }
 
     /**
@@ -59,22 +57,28 @@ class InventoryController extends Controller
      */
     public function store(Request $request)
     {
-
+        // バリデーション
         $request->validate([
             'name' => 'required|string|max:255',
-            'stock' => 'required|integer', 
+            'stock' => 'required|integer',
         ]);
 
-        DB::table('inventories')->insert([
-            'name' => $request->input('name'), 
-            'stock' => $request->input('stock'), 
-            'user_id' => auth()->id(), 
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-         dd($data);
-          DB::table('inventories')->insert($data);
-         return redirect()->back()->with('success', '在庫が追加されました。');
+         // 既存の食材を確認
+        $inventory = Inventory::where('name', $request->input('name'))->first();
+
+        if ($inventory) {
+            // 既存の食材がある場合は在庫を加算
+            $inventory->stock += $request->input('stock');
+            $inventory->save();
+        } else {
+            // 新しい食材の場合は新規作成
+            Inventory::create([
+                'name' => $request->input('name'),
+                'stock' => $request->input('stock'),
+                'user_id' => auth()->id(),
+            ]);
+        }
+        return redirect()->back()->with('success', '在庫が追加されました。');
     }
 
     /**
@@ -82,7 +86,7 @@ class InventoryController extends Controller
      */
     public function show(Inventory $inventory)
     {
-        //
+        // 表示用の処理
     }
 
     /**
@@ -90,7 +94,7 @@ class InventoryController extends Controller
      */
     public function edit(Inventory $inventory)
     {
-        //
+        // 編集用の処理
     }
 
     /**
@@ -98,7 +102,7 @@ class InventoryController extends Controller
      */
     public function update(Request $request, Inventory $inventory)
     {
-        //
+        // 更新用の処理
     }
 
     /**
@@ -106,8 +110,6 @@ class InventoryController extends Controller
      */
     public function destroy(Inventory $inventory)
     {
-        //
+        // 削除用の処理
     }
-
-    
 }

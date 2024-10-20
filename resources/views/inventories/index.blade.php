@@ -12,10 +12,10 @@
           <form id="ingredient-form" method="POST" action="{{ route('inventories.index') }}">
             @csrf
             <div class="mb-4">
-              <label for="inventory" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">食材</label>
+              <label for="name" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">食材</label>
               <input type="text" name="name" id="name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline">
               <input type="number" id="stock" name="stock" required>
-              @error('inventory')
+              @error('name')
               <span class="text-red-500 text-xs italic">{{ $message }}</span>
               @enderror
             </div>
@@ -30,9 +30,9 @@
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
       <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
         <div class="p-6 text-gray-900 dark:text-gray-100">
-          <div class="mb-4 p-4 bg-gray-100 dark:bg-gray-700 rounded-lg" id="inventory-list"> {{-- IDを修正 --}}
+          <div class="mb-4 p-4 bg-gray-100 dark:bg-gray-700 rounded-lg" id="inventory-list">
            @foreach ($inventories as $inventory)
-           <p class="text-gray-800 dark:text-gray-300">{{ $inventory->inventory }}</p>
+           <p class="text-gray-800 dark:text-gray-300">{{ $inventory->name }} (在庫: {{ $inventory->stock }})</p>
            @endforeach
           </div>
         </div>
@@ -51,12 +51,11 @@
           url: $(this).attr('action'),
           data: $(this).serialize(), 
           success: function(response) {
-           
-            $('#inventory-list').append('<p class="text-gray-800 dark:text-gray-300">' + response.inventory + '</p>');
-            $('#inventory').val(''); 
+            $('#inventory-list').append('<p class="text-gray-800 dark:text-gray-300">' + response.inventory.name + ' (在庫: ' + response.inventory.stock + ')</p>');
+            $('#name').val(''); 
+            $('#stock').val('');
           },
           error: function(xhr) {
-            // エラーハンドリング
             if (xhr.responseJSON && xhr.responseJSON.message) {
               alert('エラーが発生しました: ' + xhr.responseJSON.message);
             } else {
