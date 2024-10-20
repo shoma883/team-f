@@ -37,6 +37,7 @@ Route::middleware('auth')->group(function () {
 	Route::resource('inventories', InventoryController::class);
 
 	Route::get('/inventories/show', [InventoryController::class, 'show'])->name('inventories.show');
+  Route::post('/inventory/store', [InventoryController::class, 'store'])->name('inventory.store');
 
 
 	Route::get('/gemini', [GeminiController::class, 'index'])->name('gemini.index');
