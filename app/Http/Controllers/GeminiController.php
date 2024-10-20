@@ -76,8 +76,9 @@ class GeminiController extends Controller
 
     // 不要な部分を削除
     $cleanedContent = str_replace('json', '', $cleanedContent);
+    //dd($cleanedContent);
 
-    // JSON形式に変換
+    // 配列にデコード
     $dishes = json_decode($cleanedContent, true);
 
     // デコード結果を確認
@@ -103,21 +104,39 @@ class GeminiController extends Controller
 
   public function save(Request $request)
   {
-    $recipes = json_decode($request->input('recipes'), true);
+    // JSON形式の文字列として取得
+    $recipes = $request->input('recipes');
     $selectedIndex = $request->input('selected_recipe');
 
-    $selectedRecipe = $recipes[$selectedIndex];
+    // 選択されたインデックスを使用して、選んだ料理を取得
+    $selectedRecipeJson = $recipes[$selectedIndex] ?? null;
 
-    // レシピの保存処理
-    if ($selectedRecipe) {
-      \App\Models\History::create([
-        'name' => $selectedRecipe['料理名'],
-        'ingredients' => json_encode($selectedRecipe['材料']),
-      ]);
+    if ($selectedRecipeJson) {
+      // JSON形式の文字列をデコードして配列に変換
+      $selectedRecipe = json_decode($selectedRecipeJson, true);
 
-      return redirect()->route('gemini.index')->with('success', '選択したレシピを保存しました。');
-    }
+      // デコード結果を確認
+    //   if (json_last_error() !== JSON_ERROR_NONE) {
+    //     return back()->with('error', 'レシピの保存に失敗しました。JSONエラーが発生しました。');
+    //   }
 
-    return back()->with('error', 'レシピの保存に失敗しました。');
+    //   // データベースにレシピを保存
+    //   \App\Models\History::create([
+    //     'name' => $selectedRecipe['料理名'],
+    //     'ingredients' => json_encode($selectedRecipe['材料']),
+    //   ]);
+
+      return  view('gemini.inventory', compact('selectedRecipe'));
+    }    
+
+    return back()->with('error', 'レシピの保存に失敗しました。選択された料理が見つかりませんでした。');
   }
+
+//   public function inventory(Request $request)
+//   {
+//     // ビューにデータを渡す
+//     return view('gemini.inventory', compact('dish', 'ingredients'));
+//   }
+
 }
+
