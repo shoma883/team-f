@@ -56,7 +56,7 @@ class GeminiController extends Controller
 
     // レシピの保存処理
     if ($selectedRecipe) {
-      \App\Models\Recipe::create([
+      \App\Models\History::create([
         'name' => $selectedRecipe['料理名'],
         'ingredients' => json_encode($selectedRecipe['材料']),
       ]);
