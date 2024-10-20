@@ -59,10 +59,13 @@ class InventoryController extends Controller
      */
     public function store(Request $request)
     {
-
+        
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|unique:inventories,name',
             'stock' => 'required|integer', 
+             ], [
+        'name.unique' => 'この食材はすでに存在します。' // エラーメッセージのカスタマイズ
+ 
         ]);
 
         DB::table('inventories')->insert([
@@ -72,8 +75,7 @@ class InventoryController extends Controller
             'created_at' => now(),
             'updated_at' => now(),
         ]);
-         dd($data);
-          DB::table('inventories')->insert($data);
+
          return redirect()->back()->with('success', '在庫が追加されました。');
     }
 
@@ -98,7 +100,15 @@ class InventoryController extends Controller
      */
     public function update(Request $request, Inventory $inventory)
     {
-        //
+        $request->validate([
+        'stock' => 'required|integer',
+    ]);
+
+    
+      $inventory->stock = $request->input('stock');
+      $inventory->save();
+
+    return response()->json(['success' => '在庫が更新されました。']);
     }
 
     /**
