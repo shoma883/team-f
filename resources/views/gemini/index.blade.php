@@ -12,7 +12,7 @@
         <div class="p-6 text-gray-900 dark:text-gray-100">
           <form action="{{ route('gemini.entry') }}" method="post">
             @csrf
-            <input name="toGeminiText" autofocus>
+            <input name="toGeminiText" autofocus class="text-black">
             @isset($result['task'])
               {{ $result['task'] }}
             @endisset
