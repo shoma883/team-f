@@ -120,4 +120,16 @@ class GeminiController extends Controller
 
     return back()->with('error', 'レシピの保存に失敗しました。');
   }
+
+  public function inventory(Request $request)
+  {
+    // クエリパラメータから料理名と材料リストを取得
+    $dish = $request->input('dish');
+    $ingredients = json_decode($request->input('ingredients'), true);
+
+    // ビューにデータを渡す
+    return view('gemini.inventory', compact('dish', 'ingredients'));
+  }
+
 }
+

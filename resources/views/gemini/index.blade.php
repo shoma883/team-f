@@ -1,7 +1,7 @@
 <x-app-layout>
   <x-slot name="header">
     <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-      {{ __('Dashboard') }}
+      {{ __('提案') }}
     </h2>
   </x-slot>
 
@@ -28,8 +28,8 @@
               <ul>
                 @foreach ($dishes['料理'] as $dish)
                   <li>
-                    <!-- <a href="{{ route('inventory.show', ['dish' => $dish['料理名']]) }}"
-                            onclick="return confirm('この料理の在庫フォームに移動しますか？')"> -->
+                    <a href="{{ route('gemini.inventory', ['dish' => $dish['料理名']]) }}"
+                            onclick="return confirm('この料理の在庫フォームに移動しますか？')">
                     <strong>{{ $dish['料理名'] }}</strong>
                     <ul>
                       @foreach ($dish['材料'] as $ingredient)
