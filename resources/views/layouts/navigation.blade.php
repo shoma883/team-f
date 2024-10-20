@@ -19,11 +19,7 @@
                     <x-nav-link :href="route('gemini.index')" :active="request()->routeIs('inventories.index')">
                         {{ __('検索') }}
                     </x-nav-link>
-<<<<<<< HEAD
                     
-=======
-
->>>>>>> b51f3b19de8498bc4850f462a6ec3a1d66d903f1
                     <x-nav-link :href="route('inventories.index')" :active="request()->routeIs('inventories.index')">
                         {{ __('食材入力フォーム') }}
                     </x-nav-link>
