@@ -1,7 +1,7 @@
 <x-app-layout>
   <x-slot name="header">
     <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-      {{ __('Dashboard') }}
+      {{ __('提案') }}
     </h2>
   </x-slot>
 
@@ -25,20 +25,6 @@
           @isset($dishes)
 
             @if (!empty($dishes['料理']))
-              {{-- <ul>
-                @foreach ($dishes['料理'] as $dish)
-                  <li>
-                    <!-- <a href="{{ route('inventory.show', ['dish' => $dish['料理名']]) }}"
-                            onclick="return confirm('この料理の在庫フォームに移動しますか？')"> -->
-                    <strong>{{ $dish['料理名'] }}</strong>
-                    <ul>
-                      @foreach ($dish['材料'] as $ingredient)
-                        <li>{{ $ingredient['材料名'] }}: {{ $ingredient['個数'] }}</li>
-                      @endforeach
-                    </ul>
-                  </li>
-                @endforeach
-              </ul> --}}
               <form action="{{ route('gemini.save') }}" method="POST">
                 @csrf
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">

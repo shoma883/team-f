@@ -57,28 +57,25 @@ class InventoryController extends Controller
      */
     public function store(Request $request)
     {
+        
         // バリデーション
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|unique:inventories,name',
             'stock' => 'required|integer',
+             ], [
+        'name.unique' => 'この食材はすでに存在します。' // エラーメッセージのカスタマイズ
+ 
         ]);
 
-         // 既存の食材を確認
-        $inventory = Inventory::where('name', $request->input('name'))->first();
+        DB::table('inventories')->insert([
+            'name' => $request->input('name'), 
+            'stock' => $request->input('stock'), 
+            'user_id' => auth()->id(), 
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
 
-        if ($inventory) {
-            // 既存の食材がある場合は在庫を加算
-            $inventory->stock += $request->input('stock');
-            $inventory->save();
-        } else {
-            // 新しい食材の場合は新規作成
-            Inventory::create([
-                'name' => $request->input('name'),
-                'stock' => $request->input('stock'),
-                'user_id' => auth()->id(),
-            ]);
-        }
-        return redirect()->back()->with('success', '在庫が追加されました。');
+         return redirect()->back()->with('success', '在庫が追加されました。');
     }
 
     /**
@@ -102,6 +99,15 @@ class InventoryController extends Controller
      */
     public function update(Request $request, Inventory $inventory)
     {
+        $request->validate([
+        'stock' => 'required|integer',
+    ]);
+
+    
+      $inventory->stock = $request->input('stock');
+      $inventory->save();
+
+    return response()->json(['success' => '在庫が更新されました。']);
         // 更新用の処理
     }
 
