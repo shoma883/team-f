@@ -5,15 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Inventory extends Model
+class History extends Model
 {
-    /** @use HasFactory<\Database\Factories\InventoryFactory> */
     use HasFactory;
 
-    protected $fillable = [
-        'name',
-        'stock',
-    ];
+    protected $fillable = ['name', 'ingredients'];
 
     public function user()
     {
