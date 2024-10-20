@@ -19,6 +19,7 @@ Route::middleware('auth')->group(function () {
 	Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
 	Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+
     
   Route::get('/inventories', [InventoryController::class, 'index'])->name('inventories.index');
   Route::get('inventories/index', [InventoryController::class, 'index']);
@@ -26,16 +27,21 @@ Route::middleware('auth')->group(function () {
 
  
   Route::resource('inventories', InventoryController::class);
-  Route::get('/inventories/stock', [InventoryController::class, 'stock'])->name('inventories.stock');
+
   Route::get('/inventories/index', [InventoryController::class, 'index'])->name('inventories.index');
 
 	Route::get('/gemini', [GeminiController::class, 'index'])->name('gemini.index');
 	Route::post('/gemini', [GeminiController::class, 'entry'])->name('entry');
 	
+
+	Route::resource('inventories', InventoryController::class);
+
+	Route::get('/inventories/show', [InventoryController::class, 'show'])->name('inventories.show');
+
+
 	Route::get('/gemini', [GeminiController::class, 'index'])->name('gemini.index');
 	Route::post('/gemini', [GeminiController::class, 'entry'])->name('gemini.entry');
 	Route::post('/gemini/save', [GeminiController::class, 'save'])->name('gemini.save');
-
 });
 
 require __DIR__ . '/auth.php';
