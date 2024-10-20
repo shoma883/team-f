@@ -32,12 +32,8 @@ Route::middleware('auth')->group(function () {
   Route::get('inventories/input', [InventoryController::class, 'input']);
   Route::post('/inventories/input', [InventoryController::class, 'input'])->name('inventories.input');
 
-  Route::get('/inventories/input', [InventoryController::class, 'input'])->name('inventories.input');
-
  
-	Route::get('/inventories/input', [InventoryController::class, 'input'])->name('inventories.input');
 
-    Route::get('/inventories/input', [InventoryController::class, 'input'])->name('inventories.input');
 
  
 
