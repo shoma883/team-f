@@ -10,19 +10,32 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
                     <h3 class="text-lg font-semibold">料理名: {{ $selectedRecipe['料理名'] }}</h3> <!-- 料理名を表示 -->
-
+                        <form action="{{ route('gemini.update') }}" method="POST">
                         @csrf
                         <ul>
                             @foreach ($selectedRecipe['材料'] as $ingredient)
                                 <li>
                                     {{ $ingredient['材料名'] }}:
-                                    <span>初期数 <input type="number" name="initial_count[{{ $ingredient['材料名'] }}]" value="{{ $ingredient['個数'] }}" readonly /></span>
+                                    <span>初期数 
+                                        <input type="number" name="initial_count[{{ $ingredient['材料名'] }}]" 
+                                            value="{{ $inventories->firstWhere('name', $ingredient['材料名']) ? $inventories->firstWhere('name', $ingredient['材料名'])->stock : 0 }}" 
+                                            readonly />
+                                    </span>
                                     → 
-                                    <span>変更後数 <input type="number" name="updated_count[{{ $ingredient['材料名'] }}]" value="0" /></span>
+                                    <span>変更後数 
+                                        <input type="number" name="updated_count[{{ $ingredient['材料名'] }}]" 
+                                            value="{{ ($inventoryItem = $inventories->firstWhere('name', $ingredient['材料名'])) ? 
+                                                        ($inventoryItem->stock - $ingredient['個数']) : 
+                                                        -$ingredient['個数'] }}" 
+                                        />
+                                    </span>
+
+
                                 </li>
                             @endforeach
                         </ul>
-                        <button type="submit" class="mt-4 bg-blue-500 text-white font-bold py-2 px-4 rounded">入力</button>
+                        <button type="submit" class="mt-4 bg-blue-700 text-white font-bold py-2 px-4 rounded">入力</button>
+                    </form>
                 </div>
             </div>
         </div>

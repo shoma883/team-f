@@ -15,6 +15,7 @@ return new class extends Migration
 			$table->id();
 			$table->string('name');
 			$table->integer('stock');
+			$table->unsignedBigInteger('user_id'); // unsignedのbigint型
 			$table->timestamps();
 		});
 	}
