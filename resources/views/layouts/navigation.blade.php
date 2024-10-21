@@ -16,7 +16,7 @@
             {{ __('Dashboard') }}
           </x-nav-link>
 
-          <x-nav-link :href="route('gemini.index')" :active="request()->routeIs('inventories.index')">
+          <x-nav-link :href="route('gemini.index')" :active="request()->routeIs('gemini.index')">
             {{ __('検索') }}
           </x-nav-link>
 
@@ -58,8 +58,8 @@
               @csrf
 
               <x-dropdown-link :href="route('logout')"
-                onclick="event.preventDefault();
-                                                this.closest('form').submit();">
+                onclick="event.preventDefault();this.closest('form').submit();
+              ">
                 {{ __('Log Out') }}
               </x-dropdown-link>
             </form>
@@ -89,8 +89,7 @@
         {{ __('Dashboard') }}
       </x-responsive-nav-link>
 
-      <!-- 🔽 1項目追加 -->
-      <x-responsive-nav-link :href="route('gemini.index')" :active="request()->routeIs('inventories.index')">
+      <x-responsive-nav-link :href="route('gemini.index')" :active="request()->routeIs('gemini.index')">
         {{ __('検索') }}
       </x-responsive-nav-link>
 

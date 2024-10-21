@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\Inventory;
@@ -12,38 +11,37 @@ class InventoryController extends Controller
      * Display a listing of the resource.
      */
 
-     public function input()
+    public function input()
     {
-        //
-        
+        // インプット用の処理
     }
 
     public function index(Request $request)
     {
-       // POSTリクエストの場合
-    if ($request->isMethod('post')) {
-        // 食材のバリデーション
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'stock' => 'required|integer',
+        // POSTリクエストの場合
+        if ($request->isMethod('post')) {
+            // 食材のバリデーション
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'stock' => 'required|integer',
+            ]);
+
+            // 新しい食材をデータベースに保存
+            $inventory = new Inventory();
+            $inventory->name = $request->input('name');
+            $inventory->stock = $request->input('stock');
+            $inventory->user_id = auth()->id();
+            $inventory->save();
+
+            // 保存した食材をJSONで返す
+            return response()->json(['inventory' => $inventory]);
+        }
+
+        // GETリクエストの場合、食材一覧を返す
+        $inventories = Inventory::all();
+        return view('inventories.index', [ 
+            'inventories' => $inventories
         ]);
-
-        // 新しい食材をデータベースに保存
-        $inventory = new Inventory();
-        $inventory->name = $request->input('name');
-        $inventory->stock = $request->input('stock');
-        $inventory->user_id = auth()->id();
-        $inventory->save();
-
-        // 保存した食材をJSONで返す
-        return response()->json(['inventory' => $inventory->inventory]);
-    }
-
-    // GETリクエストの場合、食材一覧を返す
-    $inventories = Inventory::all();
-    return view('inventories.index', [ 
-        'inventories' => $inventories
-    ]);
     }
 
     /**
@@ -51,7 +49,7 @@ class InventoryController extends Controller
      */
     public function create()
     {
-        //
+        // 作成用の処理
     }
 
     /**
@@ -59,10 +57,14 @@ class InventoryController extends Controller
      */
     public function store(Request $request)
     {
-
+        
+        // バリデーション
         $request->validate([
-            'name' => 'required|string|max:255',
-            'stock' => 'required|integer', 
+            'name' => 'required|string|max:255|unique:inventories,name',
+            'stock' => 'required|integer',
+             ], [
+        'name.unique' => 'この食材はすでに存在します。' // エラーメッセージのカスタマイズ
+ 
         ]);
 
         DB::table('inventories')->insert([
@@ -72,8 +74,7 @@ class InventoryController extends Controller
             'created_at' => now(),
             'updated_at' => now(),
         ]);
-         dd($data);
-          DB::table('inventories')->insert($data);
+
          return redirect()->back()->with('success', '在庫が追加されました。');
     }
 
@@ -82,7 +83,7 @@ class InventoryController extends Controller
      */
     public function show(Inventory $inventory)
     {
-        //
+        // 表示用の処理
     }
 
     /**
@@ -90,15 +91,24 @@ class InventoryController extends Controller
      */
     public function edit(Inventory $inventory)
     {
-        //
+        // 編集用の処理
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Inventory $inventory)
+    public function update(Request $request, Inventory $inventory, $id)
     {
-        //
+        $request->validate([
+        'stock' => 'required|integer|min:0',
+    ]);
+
+      $inventory = Inventory::findOrFail($id);
+      $inventory->stock = $request->input('stock');
+      $inventory->save();
+
+    return response()->json(['success' => '在庫が更新されました。']);
+        // 更新用の処理
     }
 
     /**
@@ -106,8 +116,6 @@ class InventoryController extends Controller
      */
     public function destroy(Inventory $inventory)
     {
-        //
+        // 削除用の処理
     }
-
-    
 }

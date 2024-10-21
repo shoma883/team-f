@@ -2,10 +2,9 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\InventoryController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GeminiController;
 use App\Http\Controllers\HistoryController;
-use App\Http\Controllers\ModalController;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
 	return view('welcome');
@@ -21,32 +20,20 @@ Route::middleware('auth')->group(function () {
 	Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
 	Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-
-
+	// Inventory Routes ===============================================================================
+	Route::resource('inventories', InventoryController::class);
 	Route::get('/inventories', [InventoryController::class, 'index'])->name('inventories.index');
-	Route::get('inventories/index', [InventoryController::class, 'index']);
-	Route::post('/inventories/index', [InventoryController::class, 'index'])->name('inventories.index');
-
-
-	Route::resource('inventories', InventoryController::class);
-
-	Route::get('/inventories/index', [InventoryController::class, 'index'])->name('inventories.index');
-
-	Route::get('/gemini', [GeminiController::class, 'index'])->name('gemini.index');
-	Route::post('/gemini', [GeminiController::class, 'entry'])->name('entry');
-
-
-	Route::resource('inventories', InventoryController::class);
-
+	Route::post('/inventories', [InventoryController::class, 'index'])->name('inventories.index');
 	Route::get('/inventories/show', [InventoryController::class, 'show'])->name('inventories.show');
 	Route::post('/inventory/store', [InventoryController::class, 'store'])->name('inventory.store');
 
-
+	// Gemini Routes ===================================================================================
 	Route::get('/gemini', [GeminiController::class, 'index'])->name('gemini.index');
 	Route::post('/gemini', [GeminiController::class, 'entry'])->name('gemini.entry');
 	Route::get('/gemini/inventory', [GeminiController::class, 'inventory'])->name('gemini.inventory');
 	Route::post('/gemini/save', [GeminiController::class, 'save'])->name('gemini.save');
 
+	// History Routes ==================================================================================
 	Route::get('/histories', [HistoryController::class, 'index'])->name('histories.index');
 	Route::get('/histories/{history}', [HistoryController::class, 'show'])->name('histories.show');
 });
