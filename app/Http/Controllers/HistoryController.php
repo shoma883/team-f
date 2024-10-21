@@ -35,9 +35,14 @@ class HistoryController extends Controller
   /**
    * Display the specified resource.
    */
-  public function show(string $id)
+  public function show($id)
   {
-    //
+    $history = \App\Models\History::findOrFail($id);
+
+    // ingredientsをJSONから配列にデコード
+    $history->ingredients = json_decode($history->ingredients, true);
+
+    return response()->json($history);
   }
 
   /**

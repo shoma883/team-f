@@ -5,6 +5,7 @@ use App\Http\Controllers\InventoryController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GeminiController;
 use App\Http\Controllers\HistoryController;
+use App\Http\Controllers\ModalController;
 
 Route::get('/', function () {
 	return view('welcome');
@@ -47,6 +48,7 @@ Route::middleware('auth')->group(function () {
 	Route::post('/gemini/save', [GeminiController::class, 'save'])->name('gemini.save');
 
 	Route::get('/histories', [HistoryController::class, 'index'])->name('histories.index');
+	Route::get('/histories/{history}', [HistoryController::class, 'show'])->name('histories.show');
 });
 
 require __DIR__ . '/auth.php';
