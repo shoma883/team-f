@@ -15,24 +15,18 @@ Route::get('/dashboard', function () {
 
 Route::middleware('auth')->group(function () {
 
-	Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-	Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-	Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
-
     
   Route::get('/inventories', [InventoryController::class, 'index'])->name('inventories.index');
   Route::get('inventories/index', [InventoryController::class, 'index']);
   Route::post('/inventories/index', [InventoryController::class, 'index'])->name('inventories.index');
-
  
-  Route::resource('inventories', InventoryController::class);
+
 
   Route::get('/inventories/index', [InventoryController::class, 'index'])->name('inventories.index');
 
 	Route::get('/gemini', [GeminiController::class, 'index'])->name('gemini.index');
 	Route::post('/gemini', [GeminiController::class, 'entry'])->name('entry');
-  Route::resource('inventory', InventoryController::class);	
+
 
 	Route::resource('inventories', InventoryController::class);
   Route::put('/inventory/{id}/update', [InventoryController::class, 'update'])->name('inventory.update');
@@ -44,6 +38,9 @@ Route::middleware('auth')->group(function () {
 	Route::post('/gemini', [GeminiController::class, 'entry'])->name('gemini.entry');
 	Route::get('/gemini/inventory', [GeminiController::class, 'inventory'])->name('gemini.inventory');
 	Route::post('/gemini/save', [GeminiController::class, 'save'])->name('gemini.save');
+    Route::get('/gemini/save', [GeminiController::class, 'save'])->name('gemini.save');
+    Route::post('/gemini/update', [GeminiController::class, 'update'])->name('gemini.update');
+    
 
     // Profile関連のルート
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
