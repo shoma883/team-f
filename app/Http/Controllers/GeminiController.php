@@ -80,10 +80,13 @@ class GeminiController extends Controller
 
     // 配列にデコード
     $dishes = json_decode($cleanedContent, true);
+    
 
     // デコード結果を確認
     if (json_last_error() !== JSON_ERROR_NONE) {
-      dd('JSONエラー: ' . json_last_error_msg());
+      dd('JSONエラー: ' . json_last_error_msg(), $cleanedContent);
+    } else {
+        //dd($cleanedContent);
     }
 
     // ビューに結果を渡して表示
