@@ -42,7 +42,7 @@
                 <button class="bg-green-500 hover:bg-green-700 text-brack font-bold py-1 px-2 rounded"
                   onclick="changeStock({{ $inventory->id }}, 1)">＋</button>
                 <input type="number" id="stock-{{ $inventory->id }}" name="stock[{{ $inventory->id }}]"
-                  value="{{ $inventory->stock }}" required class="border rounded px-3 py-3 w-7 mx-3" readonly>
+                  value="{{ $inventory->stock }}" required class="border rounded px-3 py-3 w-12 mx-3" readonly>
                 <button class="bg-red-500 hover:bg-red-700 text-brack font-bold py-1 px-2 rounded"
                   onclick="changeStock({{ $inventory->id }}, -1)">－</button>
                 <button class="ml-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded"
