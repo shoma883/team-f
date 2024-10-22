@@ -31,8 +31,10 @@ Route::middleware('auth')->group(function () {
 	// Gemini Routes ===================================================================================
 	Route::get('/gemini', [GeminiController::class, 'index'])->name('gemini.index');
 	Route::post('/gemini', [GeminiController::class, 'entry'])->name('gemini.entry');
+	Route::post('/gemini/update', [GeminiController::class, 'update'])->name('gemini.update');
 	Route::get('/gemini/inventory', [GeminiController::class, 'inventory'])->name('gemini.inventory');
 	Route::post('/gemini/save', [GeminiController::class, 'save'])->name('gemini.save');
+	
 
 	// History Routes ==================================================================================
 	Route::get('/histories', [HistoryController::class, 'index'])->name('histories.index');
