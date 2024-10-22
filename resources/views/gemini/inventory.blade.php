@@ -10,7 +10,7 @@
       <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
         <div class="p-6 text-gray-900 dark:text-gray-100">
           <h3 class="text-lg font-semibold">料理名: {{ $selectedRecipe['料理名'] }}</h3> <!-- 料理名を表示 -->
-          <form action="{{ route('gemini.save') }}" method="POST">
+          <form action="{{ route('gemini.update') }}" method="POST">
             @csrf
             <ul>
               @foreach ($selectedRecipe['材料'] as $ingredient)
@@ -33,7 +33,7 @@
                 </li>
               @endforeach
             </ul>
-            <button type="submit" class="mt-4 bg-blue-700 text-white font-bold py-2 px-4 rounded">入力</button>
+            <button type="submit" class="mt-4 bg-blue-500 text-white font-bold py-2 px-4 rounded">入力</button>
           </form>
         </div>
       </div>

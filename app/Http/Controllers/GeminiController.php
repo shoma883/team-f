@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB; 
 use App\Models\Inventory; // Inventoryモデルをインポート
 use Gemini\Laravel\Facades\Gemini;
 
@@ -148,57 +149,34 @@ class GeminiController extends Controller
   }
 
   public function update(Request $request)
-{
-    // 入力された材料名と変更後数を取得
-    $updatedCounts = $request->input('updated_count');
+  {
+      // 入力された材料名と変更後数を取得
+      $updatedCounts = $request->input('updated_count');
 
-    foreach ($updatedCounts as $ingredientName => $updatedCount) {
-        // 在庫アイテムを取得
-        $inventoryItem = Inventory::where('name', $ingredientName)
-                                  ->where('user_id', auth()->id()) // 現在のユーザーに関連する在庫アイテムを取得
-                                  ->first();
+      foreach ($updatedCounts as $ingredientName => $updatedCount) {
+          // 在庫アイテムを取得
+          $inventoryItem = Inventory::where('name', $ingredientName)
+                                    ->where('user_id', auth()->id()) // 現在のユーザーに関連する在庫アイテムを取得
+                                    ->first();
 
-        if ($inventoryItem) {
-            // 既存の在庫アイテムが見つかった場合、変更後数で更新
-            $inventoryItem->stock = $updatedCount;
-            $inventoryItem->updated_at = now(); // 更新日時を変更
-            $inventoryItem->save();
-        } else {
-            // 新しい材料の場合は新規作成
-            Inventory::create([
+          if ($inventoryItem) {
+              // 既存の在庫アイテムが見つかった場合、変更後数で更新
+              $inventoryItem->stock = $updatedCount;
+              $inventoryItem->updated_at = now(); // 更新日時を変更
+              $inventoryItem->save();
+          } else {
+              // 新しい材料の場合は新規作成
+              DB::table('inventories')->insert([
                 'name' => $ingredientName,
                 'stock' => $updatedCount,
                 'user_id' => auth()->id(), // 現在のユーザーIDを保存
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
-        }
-    }
+          }
+      }
 
-    return redirect()->route('gemini.index')->with('success', '在庫が更新されました。');
-}
+      return redirect()->route('gemini.index')->with('success', '在庫が更新されました。');
+  }
 
-
-
-  // public function update(Request $request)
-  // {
-  //     // 入力された材料名と変更後数を取得
-  //     $updatedCounts = $request->input('updated_count');
-
-  //     foreach ($updatedCounts as $ingredientName => $updatedCount) {
-  //         // 在庫アイテムを取得
-  //         $inventoryItem = Inventory::where('name', $ingredientName)->first();
-
-  //         if ($inventoryItem) {
-  //             // 既存の在庫アイテムが見つかった場合、変更後数で更新
-  //             $inventoryItem->stock = $updatedCount;
-  //             $inventoryItem->save();
-  //         } else {
-  //             // 新しい材料の場合は、新規に作成する場合の処理もここに追加できます
-  //             Inventory::create(['name' => $ingredientName, 'stock' => $updatedCount]);
-  //         }
-  //     }
-
-  //     return redirect()->route('gemini.index')->with('success', '在庫が更新されました。');
-  // }
 }
