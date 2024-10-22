@@ -17,11 +17,11 @@
           </x-nav-link>
 
           <x-nav-link :href="route('gemini.index')" :active="request()->routeIs('gemini.index')">
-            {{ __('検索') }}
+            {{ __('料理提案') }}
           </x-nav-link>
 
           <x-nav-link :href="route('inventories.index')" :active="request()->routeIs('inventories.index')">
-            {{ __('食材入力フォーム') }}
+            {{ __('在庫管理') }}
           </x-nav-link>
 
           <x-nav-link :href="route('histories.index')" :active="request()->routeIs('histories.index')">
@@ -90,11 +90,11 @@
       </x-responsive-nav-link>
 
       <x-responsive-nav-link :href="route('gemini.index')" :active="request()->routeIs('gemini.index')">
-        {{ __('検索') }}
+        {{ __('料理提案') }}
       </x-responsive-nav-link>
 
       <x-responsive-nav-link :href="route('inventories.index')" :active="request()->routeIs('inventories.index')">
-        {{ __('食材入力フォーム') }}
+        {{ __('在庫管理') }}
       </x-responsive-nav-link>
 
       <x-responsive-nav-link :href="route('histories.index')" :active="request()->routeIs('histories.index')">
