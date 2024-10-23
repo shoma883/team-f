@@ -19,6 +19,7 @@
   <style>
     input {
       color: black;
+      border-radius: 0.25rem;
     }
   </style>
 
