@@ -47,6 +47,8 @@
                   onclick="changeStock({{ $inventory->id }}, -1)">－</button>
                 <button class="ml-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded"
                   onclick="updateStock({{ $inventory->id }})">更新</button>
+                <button class="ml-4 bg-blue-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded"
+                  onclick="deleteInventory({{ $inventory->id }})">削除</button>
               </div>
             @endforeach
           </div>
@@ -108,6 +110,26 @@
         }
       });
     }
+
+    function deleteInventory(inventoryId) {
+      if (!confirm('本当に削除しますか？')) return;
+
+      $.ajax({
+        type: 'DELETE',
+        url: '/inventory/' + inventoryId + '/delete', // 削除用URL
+        data: {
+          _token: '{{ csrf_token() }}', // CSRFトークンを送信
+        },
+        success: function(response) {
+          alert('在庫が削除されました');
+          $('#inventory-' + inventoryId).remove(); // 削除されたアイテムを画面からも消去
+        },
+        error: function(xhr) {
+          alert('エラーが発生しました: ' + xhr.responseJSON.message);
+        }
+  });
+}
+
   </script>
 
 </x-app-layout>
