@@ -58,20 +58,34 @@
 </x-app-layout>
 
 <style>
-  .bg-custom-highlight {
+  .bg-custom-highlight-white {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+
+  .bg-custom-highlight-dark {
     background-color: rgba(255, 255, 255, 0.1);
   }
 </style>
 
 <script>
+  // ダークモード判定
+  function isDarkMode() {
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+
   function selectDish(index) {
     document.getElementById('selected_recipe').value = index;
-    console.log(index);
     // クリックしたカードをハイライト表示
     document.querySelectorAll('.card').forEach(card => {
-      card.classList.remove('bg-custom-highlight');
+      card.classList.remove('bg-custom-highlight-dark', 'bg-custom-highlight-white');
     });
-    document.querySelector(`[data-index="${index}"]`).classList.add('bg-custom-highlight');
-    console.log(document.querySelector(`[data-index="${index}"]`).classList);
+
+    if (isDarkMode()) {
+      console.log('ダークモードです');
+      document.querySelector(`[data-index="${index}"]`).classList.add('bg-custom-highlight-dark');
+    } else {
+      console.log('ライトモードです');
+      document.querySelector(`[data-index="${index}"]`).classList.add('bg-custom-highlight-white');
+    }
   }
 </script>
