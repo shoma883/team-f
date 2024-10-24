@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Inventory; // Inventoryモデルをインポート
 use Gemini\Laravel\Facades\Gemini;
+use Illuminate\Support\Facades\DB;
 
 class GeminiController extends Controller
 {
@@ -85,27 +86,70 @@ class GeminiController extends Controller
 
   public function save(Request $request)
   {
+    // JSON形式の文字列として取得
     $recipes = $request->input('recipes');
     $selectedIndex = $request->input('selected_recipe');
 
+    // 選択されたインデックスを使用して、選んだ料理を取得
     $selectedRecipeJson = $recipes[$selectedIndex] ?? null;
 
     if ($selectedRecipeJson) {
+      // JSON形式の文字列をデコードして配列に変換
       $selectedRecipe = json_decode($selectedRecipeJson, true);
+
+      // デコード結果を確認
       if (json_last_error() !== JSON_ERROR_NONE) {
         return back()->with('error', 'レシピの保存に失敗しました。JSONエラーが発生しました。');
       }
 
-      // レシピを履歴に保存
+      $userId = auth()->id();
+      if (!$userId) {
+        return back()->with('error', 'レシピの保存に失敗しました。ユーザーが見つかりませんでした。');
+      }
+      // データベースにレシピを保存
       \App\Models\History::create([
-        'user_id' => auth()->id(),
+        'user_id' => $userId,
         'name' => $selectedRecipe['料理名'],
         'ingredients' => json_encode($selectedRecipe['材料']),
       ]);
 
-      return redirect()->route('gemini.index')->with('success', 'レシピが保存されました。');
+      // InventoryControllerから保存された在庫データを取得
+      $inventories = Inventory::where('user_id', auth()->id())->get();
+
+      return  view('gemini.inventory', compact('selectedRecipe', 'inventories'));
     }
 
-    return back()->with('error', '選択されたレシピが見つかりませんでした。');
+    // return back()->with('error', 'レシピの保存に失敗しました。選択された料理が見つかりませんでした。');
+  }
+
+  public function update(Request $request)
+  {
+    // 入力された材料名と変更後数を取得
+    $updatedCounts = $request->input('updated_count');
+
+    foreach ($updatedCounts as $ingredientName => $updatedCount) {
+      // 在庫アイテムを取得
+      $inventoryItem = Inventory::where('name', $ingredientName)
+        ->where('user_id', auth()->id()) // 現在のユーザーに関連する在庫アイテムを取得
+        ->first();
+
+      if ($inventoryItem) {
+        // 既存の在庫アイテムが見つかった場合、変更後数で更新
+        $inventoryItem->stock = $updatedCount;
+        $inventoryItem->updated_at = now(); // 更新日時を変更
+        $inventoryItem->save();
+      } else {
+        // 新しい材料の場合は新規作成
+        DB::table('inventories')->insert([
+          'name' => $ingredientName,
+          'stock' => $updatedCount,
+          'user_id' => auth()->id(), // 現在のユーザーIDを保存
+          'created_at' => now(),
+          'updated_at' => now(),
+        ]);
+      }
+    }
+
+    return redirect()->route('gemini.index')->with('success', '在庫が更新されました。');
   }
 }

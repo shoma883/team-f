@@ -23,11 +23,6 @@
             @enderror
           </form>
 
-          <!-- プログレスバー -->
-          <div id="progress-bar" class="my-10 bg-gray-200 h-4 rounded-full">
-            <div class="bg-blue-500 h-2 rounded-full" style="width: 0; height: 10px;"></div>
-          </div>
-
           <!-- レスポンスの表示領域 -->
           <div id="response-content" class="mt-5">
             <!-- ここにレスポンスが表示されます -->
@@ -63,6 +58,14 @@
       </div>
     </div>
   </div>
+
+  <!-- オーバーレイ（プログレスバー用） -->
+  <div id="overlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+    <div id="progress-bar" class="w-1/2 bg-gray-200 h-6 rounded-full">
+      <div class="bg-blue-500 h-6 rounded-full" style="width: 0;"></div>
+    </div>
+  </div>
+
 </x-app-layout>
 
 <script>
@@ -71,12 +74,12 @@
     event.preventDefault(); // デフォルトのフォーム送信を一旦停止
     const form = event.target;
 
-    // プログレスバーを表示
-    const progressBar = document.getElementById('progress-bar');
-    progressBar.classList.remove('hidden');
+    // オーバーレイとプログレスバーを表示
+    const overlay = document.getElementById('overlay');
+    overlay.classList.remove('hidden');
 
     // プログレスバーの進行アニメーション
-    const progress = progressBar.querySelector('div');
+    const progress = document.getElementById('progress-bar').querySelector('div');
     progress.style.width = '0%';
     let width = 0;
     const interval = setInterval(function() {
@@ -119,5 +122,19 @@
 
   .bg-custom-highlight-dark {
     background-color: rgba(255, 255, 255, 0.1);
+  }
+
+  /* オーバーレイのスタイル */
+  #overlay {
+    /* display: flex; */
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
   }
 </style>
