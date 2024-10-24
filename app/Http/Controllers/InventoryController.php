@@ -18,25 +18,6 @@ class InventoryController extends Controller
 
     public function index(Request $request)
     {
-        // POSTリクエストの場合
-        if ($request->isMethod('post')) {
-            // 食材のバリデーション
-            $request->validate([
-                'name' => 'required|string|max:255',
-                'stock' => 'required|integer',
-            ]);
-
-            // 新しい食材をデータベースに保存
-            $inventory = new Inventory();
-            $inventory->name = $request->input('name');
-            $inventory->stock = $request->input('stock');
-            $inventory->user_id = auth()->id();
-            $inventory->save();
-
-            // 保存した食材をJSONで返す
-            return response()->json(['inventory' => $inventory]);
-        }
-
         // GETリクエストの場合、食材一覧を返す
         $inventories = Inventory::all();
         return view('inventories.index', [ 
@@ -60,22 +41,29 @@ class InventoryController extends Controller
         
         // バリデーション
         $request->validate([
-            'name' => 'required|string|max:255|unique:inventories,name',
+            'name' => 'required|string|max:255',
             'stock' => 'required|integer',
-             ], [
-        'name.unique' => 'この食材はすでに存在します。' // エラーメッセージのカスタマイズ
- 
         ]);
 
-        DB::table('inventories')->insert([
-            'name' => $request->input('name'), 
-            'stock' => $request->input('stock'), 
-            'user_id' => auth()->id(), 
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+        // 食材が既に存在するかを確認
+        $existingInventory = Inventory::where('name', $request->input('name'))->first();
 
-         return redirect()->back()->with('success', '在庫が追加されました。');
+        if ($existingInventory) {
+            // 既存の食材がある場合は在庫を追加する
+            $existingInventory->stock += $request->input('stock');
+            $existingInventory->save();
+        
+            return redirect()->back()->with('success', '在庫が更新されました。');
+        } else {
+            // 新しい食材をデータベースに保存
+            Inventory::create([
+                'name' => $request->input('name'),
+                'stock' => $request->input('stock'),
+                'user_id' => auth()->id(),
+            ]);
+
+            return redirect()->back()->with('success', '新しい食材が追加されました。');
+        }
     }
 
     /**
