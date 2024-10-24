@@ -23,7 +23,7 @@ Route::middleware('auth')->group(function () {
 	// Inventory Routes ===============================================================================
 	Route::resource('inventories', InventoryController::class);
 	Route::get('/inventories', [InventoryController::class, 'index'])->name('inventories.index');
-	Route::post('/inventories', [InventoryController::class, 'index'])->name('inventories.index');
+	Route::post('/inventories', [InventoryController::class, 'store'])->name('inventories.store');
 	Route::get('/inventories/show', [InventoryController::class, 'show'])->name('inventories.show');
 	Route::post('/inventory/store', [InventoryController::class, 'store'])->name('inventory.store');
 	Route::put('/inventory/{id}/update', [InventoryController::class, 'update'])->name('inventory.update');
