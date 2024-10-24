@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Inventory;
@@ -20,7 +21,7 @@ class InventoryController extends Controller
     {
         // GETリクエストの場合、食材一覧を返す
         $inventories = Inventory::all();
-        return view('inventories.index', [ 
+        return view('inventories.index', [
             'inventories' => $inventories
         ]);
     }
@@ -38,7 +39,7 @@ class InventoryController extends Controller
      */
     public function store(Request $request)
     {
-        
+
         // バリデーション
         $request->validate([
             'name' => 'required|string|max:255',
@@ -52,7 +53,7 @@ class InventoryController extends Controller
             // 既存の食材がある場合は在庫を追加する
             $existingInventory->stock += $request->input('stock');
             $existingInventory->save();
-        
+
             return redirect()->back()->with('success', '在庫が更新されました。');
         } else {
             // 新しい食材をデータベースに保存
@@ -88,14 +89,14 @@ class InventoryController extends Controller
     public function update(Request $request, Inventory $inventory, $id)
     {
         $request->validate([
-        'stock' => 'required|integer|min:0',
-    ]);
+            'stock' => 'required|integer|min:0',
+        ]);
 
-      $inventory = Inventory::findOrFail($id);
-      $inventory->stock = $request->input('stock');
-      $inventory->save();
+        $inventory = Inventory::findOrFail($id);
+        $inventory->stock = $request->input('stock');
+        $inventory->save();
 
-    return response()->json(['success' => '在庫が更新されました。']);
+        return response()->json(['success' => '在庫が更新されました。']);
         // 更新用の処理
     }
 
