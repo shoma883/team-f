@@ -20,6 +20,9 @@
               class="bg-blue-500 hover:bg-blue-700 text-white font-bold text-2xl py-2 px-4 rounded focus:outline-none focus:shadow-outline">
               送信
             </button>
+            @error('toGeminiText')
+              <p class="text-red-500 italic">{{ $message }}</p>
+            @enderror
           </form>
 
           @isset($dishes)
