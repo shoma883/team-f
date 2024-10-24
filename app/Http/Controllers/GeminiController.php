@@ -3,11 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use App\Models\Inventory; // Inventoryモデルをインポート
 use Gemini\Laravel\Facades\Gemini;
-
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class GeminiController extends Controller
 {
@@ -71,49 +69,19 @@ class GeminiController extends Controller
         ]
       }";
 
-    //GeminiAIからのレスポンスを取得
+    // GeminiAPIからのレスポンスを取得
     $responseText = Gemini::geminiPro()->generateContent($toGeminiCommand)->text();
 
-    $result = [
-      'task' => $searchQuery,
-      'content' => ($responseText),
-    ];
-
-    // バッククォートを取り除く
-    $cleanedContent = str_replace(['```', '```'], '', $result['content']);
-
-    // 不要な部分を削除
-    $cleanedContent = str_replace('json', '', $cleanedContent);
-
-    $cleanedContent = str_replace('JSON', '', $cleanedContent);
-    //dd($cleanedContent);
-
-
-    // 配列にデコード
+    // JSONをパース
+    $cleanedContent = str_replace(['```', '```json'], '', $responseText);
     $dishes = json_decode($cleanedContent, true);
 
-
-    // デコード結果を確認
     if (json_last_error() !== JSON_ERROR_NONE) {
-      dd('JSONエラー: ' . json_last_error_msg(), $cleanedContent);
-    } else {
-      //dd($cleanedContent);
+      return back()->withErrors(['message' => 'Gemini APIからのレスポンスでエラーが発生しました。']);
     }
 
-    // ビューに結果を渡して表示
+    // レスポンスをビューに渡す
     return view('gemini.index', compact('dishes'));
-
-    // GeminiAIからのレスポンスを取得
-    $responseText = Gemini::geminiPro()->generateContent($toGeminiCommand)->text();
-
-    // 必要に応じてMarkdown形式に変換（Markdown形式で整形したい場合）
-    $result = [
-      'task' => $searchQuery,
-      'content' => ($responseText),
-    ];
-
-    // ビューに結果を渡して表示
-    return view('gemini.index', compact('result'));
   }
 
   public function save(Request $request)
