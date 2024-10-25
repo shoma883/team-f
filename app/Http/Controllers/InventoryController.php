@@ -20,7 +20,7 @@ class InventoryController extends Controller
     public function index(Request $request)
     {
         // GETリクエストの場合、食材一覧を返す
-        $inventories = Inventory::all();
+        $inventories = auth()->user()->inventories;  // ログインユーザーの在庫を取得
         return view('inventories.index', [
             'inventories' => $inventories
         ]);
@@ -47,7 +47,9 @@ class InventoryController extends Controller
         ]);
 
         // 食材が既に存在するかを確認
-        $existingInventory = Inventory::where('name', $request->input('name'))->first();
+        $existingInventory = Inventory::where('name', $request->input('name'))
+                                      ->where('user_id', auth()->id())  // ログインユーザーの在庫か確認
+                                      ->first();
 
         if ($existingInventory) {
             // 既存の食材がある場合は在庫を追加する
