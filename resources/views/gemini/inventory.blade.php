@@ -28,8 +28,6 @@
                           ? $inventoryItem->stock - $ingredient['個数']
                           : -$ingredient['個数'] }}" />
                   </span>
-
-
                 </li>
               @endforeach
             </ul>
