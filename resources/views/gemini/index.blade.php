@@ -11,11 +11,26 @@
         <div class="p-6 text-gray-900 dark:text-gray-100 m-5">
           <!-- 成功メッセージの表示 -->
           @if (session('success'))
-            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+            <div id="success-alert" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
               <strong class="font-bold">保存完了！</strong>
               <span class="block sm:inline">{{ session('success') }}</span>
             </div>
           @endif
+
+          <script>
+            // ページが読み込まれた後に実行
+            document.addEventListener('DOMContentLoaded', function() {
+              // アラートが存在する場合
+              const alert = document.getElementById('success-alert');
+              if (alert) {
+                // 3秒後にアラートを非表示にする
+                setTimeout(function() {
+                  alert.style.display = 'none'; // アラートを非表示にする
+                }, 3000); // 3000ミリ秒 = 3秒
+              }
+            });
+          </script>
+
 
           <!-- フォーム -->
           <form id="geminiForm" action="{{ route('gemini.entry') }}" method="POST">
