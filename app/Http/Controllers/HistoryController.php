@@ -12,7 +12,8 @@ class HistoryController extends Controller
    */
   public function index()
   {
-    $histories = History::where('user_id', auth()->id())->get();
+    $histories = History::where('user_id', auth()->id())->paginate(5);
+
     return view('histories.index', compact('histories'));
   }
 
@@ -64,8 +65,9 @@ class HistoryController extends Controller
   /**
    * Remove the specified resource from storage.
    */
-  public function destroy(string $id)
+  public function destroy(History $history)
   {
-    //
+    $history->delete();
+    return redirect()->route('histories.index')->with('success', '履歴が削除されました。');
   }
 }

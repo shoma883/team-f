@@ -9,22 +9,34 @@
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
       <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
         <div class="p-6 text-gray-900 dark:text-gray-100">
+          <div class="mb-4">
+            {{ $histories->appends(request()->input())->links() }}
+          </div>
           @foreach ($histories as $history)
             <div class="mb-4 p-4 bg-gray-100 dark:bg-gray-700 rounded-lg">
-              <p class="text-gray-800 dark:text-gray-300">{{ $history->name }}</p>
+              <p class="text-gray-800 dark:text-gray-300 ">{{ $history->name }}</p>
               <button onclick="showModal({{ $history->id }})" class="text-blue-500 hover:text-blue-700">
                 詳細を見る
               </button>
+              <form action="{{ route('histories.destroy', $history) }}" method="POST"
+                onsubmit="return confirm('本当に削除しますか？');">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="text-red-500 hover:text-red-700">削除</button>
+              </form>
             </div>
           @endforeach
+          <div class="mt-4">
+            {{ $histories->appends(request()->input())->links() }}
+          </div>
         </div>
       </div>
     </div>
   </div>
 
   <!-- モーダル -->
-  <div id="modal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden">
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-1/2 p-6">
+  <div id="modal" class="fixed inset-0 bg-gray-900 bg-opacity-80 flex items-center justify-center hidden">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-1/3 p-6">
       <div id="modal-content" class="text-gray-800 dark:text-gray-300">
         <!-- モーダルのコンテンツ挿入箇所 -->
       </div>
@@ -46,7 +58,7 @@
         // モーダルの内容を更新
         const modalContent = document.getElementById('modal-content');
         modalContent.innerHTML = `
-          <h3 class="text-xl">${data.name}</h3>
+          <h3 class="text-xl font-bold">${data.name}</h3>
           <ul>
             ${data.ingredients.map(ingredient => `
               <li>${ingredient.材料名}: ${ingredient.個数}</li>
