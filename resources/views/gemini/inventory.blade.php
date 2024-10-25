@@ -26,12 +26,19 @@
                     <input type="number" name="updated_count[{{ $ingredient['材料名'] }}]"
                       value="{{ ($inventoryItem = $inventories->firstWhere('name', $ingredient['材料名']))
                           ? $inventoryItem->stock - $ingredient['個数']
-                          : -$ingredient['個数'] }}" />
+                          : -$ingredient['個数'] }}" 
+                          readonly />
                   </span>
+
+                  <!-- 変更後数がマイナスの場合に「不足しています」を表示 -->
+                  @if (($inventoryItem ? $inventoryItem->stock - $ingredient['個数'] : -$ingredient['個数']) < 0)
+                    <span class="text-red-500 ml-2">材料が不足しています</span>
+                  @endif
                 </li>
               @endforeach
             </ul>
-            <button type="submit" class="mt-4 bg-blue-500 text-white font-bold py-2 px-4 rounded">入力</button>
+            <button type="submit" class="mt-4 bg-blue-500 text-white font-bold py-2 px-4 rounded"
+              onclick="return confirm('この内容で食材を追加してもよろしいですか？')">入力</button>
           </form>
         </div>
       </div>
