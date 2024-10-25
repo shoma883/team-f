@@ -35,8 +35,8 @@
   </div>
 
   <!-- モーダル -->
-  <div id="modal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden">
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-1/2 p-6">
+  <div id="modal" class="fixed inset-0 bg-gray-900 bg-opacity-80 flex items-center justify-center hidden">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-1/3 p-6">
       <div id="modal-content" class="text-gray-800 dark:text-gray-300">
         <!-- モーダルのコンテンツ挿入箇所 -->
       </div>
@@ -58,7 +58,7 @@
         // モーダルの内容を更新
         const modalContent = document.getElementById('modal-content');
         modalContent.innerHTML = `
-          <h3 class="text-xl">${data.name}</h3>
+          <h3 class="text-xl font-bold">${data.name}</h3>
           <ul>
             ${data.ingredients.map(ingredient => `
               <li>${ingredient.材料名}: ${ingredient.個数}</li>
