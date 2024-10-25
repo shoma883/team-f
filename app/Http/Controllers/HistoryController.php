@@ -64,8 +64,9 @@ class HistoryController extends Controller
   /**
    * Remove the specified resource from storage.
    */
-  public function destroy(string $id)
+  public function destroy(History $history)
   {
-    //
+    $history->delete();
+    return redirect()->route('histories.index')->with('success', '履歴が削除されました。');
   }
 }

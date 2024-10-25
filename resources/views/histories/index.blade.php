@@ -11,10 +11,16 @@
         <div class="p-6 text-gray-900 dark:text-gray-100">
           @foreach ($histories as $history)
             <div class="mb-4 p-4 bg-gray-100 dark:bg-gray-700 rounded-lg">
-              <p class="text-gray-800 dark:text-gray-300">{{ $history->name }}</p>
+              <p class="text-gray-800 dark:text-gray-300 ">{{ $history->name }}</p>
               <button onclick="showModal({{ $history->id }})" class="text-blue-500 hover:text-blue-700">
                 詳細を見る
               </button>
+              <form action="{{ route('histories.destroy', $history) }}" method="POST"
+                onsubmit="return confirm('本当に削除しますか？');">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="text-red-500 hover:text-red-700">削除</button>
+              </form>
             </div>
           @endforeach
         </div>

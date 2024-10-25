@@ -35,9 +35,10 @@ Route::middleware('auth')->group(function () {
 	Route::post('/gemini/update', [GeminiController::class, 'update'])->name('gemini.update');
 	Route::get('/gemini/inventory', [GeminiController::class, 'inventory'])->name('gemini.inventory');
 	Route::post('/gemini/save', [GeminiController::class, 'save'])->name('gemini.save');
-	
+
 
 	// History Routes ==================================================================================
+	Route::resource('histories', HistoryController::class);
 	Route::get('/histories', [HistoryController::class, 'index'])->name('histories.index');
 	Route::get('/histories/{history}', [HistoryController::class, 'show'])->name('histories.show');
 });
