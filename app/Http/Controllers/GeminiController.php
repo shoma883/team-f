@@ -74,6 +74,10 @@ class GeminiController extends Controller
 
     // JSONをパース
     $cleanedContent = str_replace(['```', '```json'], '', $responseText);
+    $cleanedContent = str_replace(['json'], '', $responseText);
+    $cleanedContent = str_replace(['JSON'], '', $responseText);
+
+
     $dishes = json_decode($cleanedContent, true);
 
     if (json_last_error() !== JSON_ERROR_NONE) {
