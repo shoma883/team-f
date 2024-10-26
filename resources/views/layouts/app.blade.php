@@ -21,6 +21,12 @@
       color: black;
       border-radius: 0.25rem;
     }
+
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
   </style>
 
 </head>

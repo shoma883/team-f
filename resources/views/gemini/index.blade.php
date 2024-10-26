@@ -9,28 +9,6 @@
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
       <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
         <div class="p-6 text-gray-900 dark:text-gray-100 m-5">
-          <!-- 成功メッセージの表示 -->
-          @if (session('success'))
-            <div id="success-alert" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
-              <strong class="font-bold">保存完了！</strong>
-              <span class="block sm:inline">{{ session('success') }}</span>
-            </div>
-          @endif
-
-          <script>
-            // ページが読み込まれた後に実行
-            document.addEventListener('DOMContentLoaded', function() {
-              // アラートが存在する場合
-              const alert = document.getElementById('success-alert');
-              if (alert) {
-                // 3秒後にアラートを非表示にする
-                setTimeout(function() {
-                  alert.style.display = 'none'; // アラートを非表示にする
-                }, 3000); // 3000ミリ秒 = 3秒
-              }
-            });
-          </script>
-
 
           <!-- フォーム -->
           <form id="geminiForm" action="{{ route('gemini.entry') }}" method="POST">
@@ -45,6 +23,7 @@
             @enderror
           </form>
 
+          <script></script>
           <!-- レスポンスの表示領域 -->
           <div id="response-content" class="mt-5">
             <!-- ここにレスポンスが表示されます -->
@@ -76,6 +55,15 @@
             @endisset
           </div>
 
+          <!-- 成功メッセージの表示 -->
+          @if (session('success'))
+            <div id="success-alert"
+              class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+              <strong class="font-bold">保存完了！</strong>
+              <span class="block sm:inline">{{ session('success') }}</span>
+            </div>
+          @endif
+
         </div>
       </div>
     </div>
@@ -91,6 +79,19 @@
 </x-app-layout>
 
 <script>
+  // 成功メッセージを非表示にする
+  // ページが読み込まれた後に実行
+  document.addEventListener('DOMContentLoaded', function() {
+    // アラートが存在する場合
+    const alert = document.getElementById('success-alert');
+    if (alert) {
+      // 3秒後にアラートを非表示にする
+      setTimeout(function() {
+        alert.style.display = 'none'; // アラートを非表示にする
+      }, 3000); // 3000ミリ秒 = 3秒
+    }
+  });
+
   // フォーム送信時にプログレスバーを表示
   document.getElementById('geminiForm').addEventListener('submit', function(event) {
     event.preventDefault(); // デフォルトのフォーム送信を一旦停止

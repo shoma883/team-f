@@ -14,7 +14,7 @@
           </div>
           @foreach ($histories as $history)
             <div class="mb-4 p-4 bg-gray-100 dark:bg-gray-700 rounded-lg">
-              <p class="text-gray-800 dark:text-gray-300 ">{{ $history->name }}</p>
+              <p class="text-xl font-semibold text-gray-800 dark:text-gray-300 ">{{ $history->name }}</p>
               <button onclick="showModal({{ $history->id }})" class="text-blue-500 hover:text-blue-700">
                 詳細を見る
               </button>
