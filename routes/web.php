@@ -28,6 +28,7 @@ Route::middleware('auth')->group(function () {
 	Route::post('/inventory/store', [InventoryController::class, 'store'])->name('inventory.store');
 	Route::put('/inventory/{id}/update', [InventoryController::class, 'update'])->name('inventory.update');
 	Route::delete('/inventory/{inventory}/delete', [InventoryController::class, 'destroy'])->name('inventories.destroy');
+	Route::put('/inventory/update-all', [InventoryController::class, 'updateAll'])->name('inventory.updateAll');
 
 	// Gemini Routes ===================================================================================
 	Route::get('/gemini', [GeminiController::class, 'index'])->name('gemini.index');

@@ -46,90 +46,100 @@
                   value="{{ $inventory->stock }}" required class="border rounded px-3 py-3 w-12 mx-3" readonly>
                 <button class="bg-red-500 hover:bg-red-700 text-brack font-bold py-1 px-2 rounded"
                   onclick="changeStock({{ $inventory->id }}, -1)">－</button>
-                <button class="ml-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded"
-                  onclick="updateStock({{ $inventory->id }})">更新</button>
                 <button class="ml-4 bg-blue-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded"
                   onclick="deleteInventory({{ $inventory->id }})">削除</button>
+                <span id="status-{{ $inventory->id }}"></span>
               </div>
             @endforeach
           </div>
+           <button id="update-all" class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">更新</button>
         </div>
       </div>
     </div>
   </div>
 
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script>
-    $(document).ready(function() {
-      $('#ingredient-form').on('submit', function(e) {
-        e.preventDefault();
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-        $.ajax({
-          type: 'POST',
-          url: $(this).attr('action'),
-          data: $(this).serialize(),
-          success: function(response) {
+<script>
+  const changes = {};
 
-            $('#inventory-list').append('<p class="text-gray-800 dark:text-gray-300">' + response
-              .inventory + '</p>');
-            $('#name').val('');
-            $('#stock').val('');
-          },
-          error: function(xhr) {
-            if (xhr.responseJSON && xhr.responseJSON.message) {
-              alert('エラーが発生しました: ' + xhr.responseJSON.message);
-            } else {
-              alert('エラーが発生しました: 不明なエラー');
-            }
+  function changeStock(inventoryId, change) {
+    const stockInput = document.getElementById(`stock-${inventoryId}`);
+    let currentStock = parseInt(stockInput.value);
+    currentStock += change;
+    stockInput.value = Math.max(0, currentStock);
+    
+    // 変更を追跡
+    changes[inventoryId] = currentStock;
+  }
+
+  $('#update-all').on('click', function () {
+    if (Object.keys(changes).length === 0) {
+      alert('変更がありません。');
+      return;
+    }
+
+    $.ajax({
+      type: 'PUT',
+      url: '{{ route("inventory.updateAll") }}', 
+      data: {
+        changes: changes,
+        _token: '{{ csrf_token() }}',
+      },
+      success: function(response) {
+        alert('在庫が更新されました');
+
+        // ステータスラベルの更新
+        Object.keys(changes).forEach(id => {
+          let statusLabel = document.getElementById(`status-${id}`);
+          if (!statusLabel) {
+            statusLabel = document.createElement('span');
+            statusLabel.id = `status-${id}`;
+            statusLabel.className = 'text-green-500 ml-2';
+            document.getElementById(`stock-${id}`).parentElement.appendChild(statusLabel);
           }
+          statusLabel.textContent = ' 変更済み'; // 更新後に表示
+
+          // 5秒後に「変更済み」を消す
+          setTimeout(() => {
+            statusLabel.textContent = '';
+          }, 5000);
         });
-      });
+        
+        // 変更リストをクリア
+        Object.keys(changes).forEach(id => delete changes[id]); 
+        
+        // ページをリロードして状態を反映
+         setTimeout(() => {
+        location.reload(); 
+    }, 5000); 
+      },
+      error: function(xhr) {
+        alert('エラーが発生しました: ' + (xhr.responseJSON.message || '不明なエラー'));
+      }
     });
+  });
 
-    function changeStock(inventoryId, change) {
-      const stockInput = document.getElementById(`stock-${inventoryId}`);
-      let currentStock = parseInt(stockInput.value);
-      currentStock += change; // 増減を加算
-      stockInput.value = Math.max(0, currentStock); // 負の数にならないように
-    }
+  function deleteInventory(inventoryId) {
+    if (!confirm('本当に削除しますか？')) return;
 
-    function updateStock(inventoryId) {
-      const stockValue = document.getElementById(`stock-${inventoryId}`).value;
+    $.ajax({
+      type: 'DELETE',
+      url: '/inventory/' + inventoryId + '/delete',
+      data: {
+        _token: '{{ csrf_token() }}',
+      },
+      success: function(response) {
+        alert('在庫が削除されました');
+        $('#inventory-' + inventoryId).remove(); // 削除後のUI更新
+      },
+      error: function(xhr) {
+        alert('エラーが発生しました: ' + xhr.responseJSON.message);
+      }
+    });
+  }
+</script>
 
-      $.ajax({
-        type: 'PUT',
-        url: '/inventory/' + inventoryId + '/update', // 適切な更新URLを設定
-        data: {
-          stock: stockValue,
-          _token: '{{ csrf_token() }}', // CSRFトークンを送信
-        },
-        success: function(response) {
-          alert('在庫が更新されました');
-        },
-        error: function(xhr) {
-          alert('エラーが発生しました: ' + xhr.responseJSON.message);
-        }
-      });
-    }
 
-    function deleteInventory(inventoryId) {
-      if (!confirm('本当に削除しますか？')) return;
-
-      $.ajax({
-        type: 'DELETE',
-        url: '/inventory/' + inventoryId + '/delete', // 削除用URL
-        data: {
-          _token: '{{ csrf_token() }}', // CSRFトークンを送信
-        },
-        success: function(response) {
-          alert('在庫が削除されました');
-          $('#inventory-' + inventoryId).remove(); // 削除されたアイテムを画面からも消去
-        },
-        error: function(xhr) {
-          alert('エラーが発生しました: ' + xhr.responseJSON.message);
-        }
-      });
-    }
-  </script>
 
 </x-app-layout>
