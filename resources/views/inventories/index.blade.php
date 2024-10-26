@@ -62,8 +62,10 @@
             </div>
             <hr class="opacity-30">
           @endforeach
-          <button id="update-all"
-            class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">更新</button>
+          <div class="flex justify-end">
+            <button id="update-all"
+              class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">更新</button>
+          </div>
         </div>
       </div>
     </div>
@@ -74,6 +76,7 @@
   <script>
     const changes = {};
 
+    // 更新ボタンの表示制御
     const updateButtonStatus = () => {
       const updateAllButton = document.getElementById('update-all');
       if ((Object.keys(changes)).length === 0) {
