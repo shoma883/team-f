@@ -63,81 +63,83 @@
 <script>
   const changes = {};
 
-  function changeStock(inventoryId, change) {
-    const stockInput = document.getElementById(`stock-${inventoryId}`);
-    let currentStock = parseInt(stockInput.value);
-    currentStock += change;
-    stockInput.value = Math.max(0, currentStock);
+    function changeStock(inventoryId, change) {
+      const stockInput = document.getElementById(`stock-${inventoryId}`);
+      let currentStock = parseInt(stockInput.value);
+      currentStock += change;
+      stockInput.value = Math.max(0, currentStock);
+      
+      // 変更を追跡
+      changes[inventoryId] = currentStock;
     
-    // 変更を追跡
-    changes[inventoryId] = currentStock;
-  }
-
-  $('#update-all').on('click', function () {
-    if (Object.keys(changes).length === 0) {
-      alert('変更がありません。');
-      return;
+    let statusLabel = document.getElementById(`status-${inventoryId}`);
+    if (!statusLabel) {
+        statusLabel = document.createElement('span');
+        statusLabel.id = `status-${inventoryId}`;
+        statusLabel.className = 'changed';
+        stockInput.parentElement.appendChild(statusLabel);
     }
-
-    $.ajax({
-      type: 'PUT',
-      url: '{{ route("inventory.updateAll") }}', 
-      data: {
-        changes: changes,
-        _token: '{{ csrf_token() }}',
-      },
-      success: function(response) {
-        alert('在庫が更新されました');
-
-        // ステータスラベルの更新
-        Object.keys(changes).forEach(id => {
-          let statusLabel = document.getElementById(`status-${id}`);
-          if (!statusLabel) {
-            statusLabel = document.createElement('span');
-            statusLabel.id = `status-${id}`;
-            statusLabel.className = 'text-green-500 ml-2';
-            document.getElementById(`stock-${id}`).parentElement.appendChild(statusLabel);
-          }
-          statusLabel.textContent = ' 変更済み'; // 更新後に表示
-
-          // 5秒後に「変更済み」を消す
-          setTimeout(() => {
-            statusLabel.textContent = '';
-          }, 5000);
-        });
-        
-        // 変更リストをクリア
-        Object.keys(changes).forEach(id => delete changes[id]); 
-        
-        // ページをリロードして状態を反映
-         setTimeout(() => {
-        location.reload(); 
-    }, 5000); 
-      },
-      error: function(xhr) {
-        alert('エラーが発生しました: ' + (xhr.responseJSON.message || '不明なエラー'));
-      }
-    });
-  });
-
-  function deleteInventory(inventoryId) {
-    if (!confirm('本当に削除しますか？')) return;
-
-    $.ajax({
-      type: 'DELETE',
-      url: '/inventory/' + inventoryId + '/delete',
-      data: {
-        _token: '{{ csrf_token() }}',
-      },
-      success: function(response) {
-        alert('在庫が削除されました');
-        $('#inventory-' + inventoryId).remove(); // 削除後のUI更新
-      },
-      error: function(xhr) {
-        alert('エラーが発生しました: ' + xhr.responseJSON.message);
-      }
-    });
+    statusLabel.textContent = '変更済み';
   }
+    $('#update-all').on('click', function () {
+      if (Object.keys(changes).length === 0) {
+        alert('変更がありません。');
+        return;
+      }
+
+      $.ajax({
+        type: 'PUT',
+        url: '{{ route("inventory.updateAll") }}', 
+        data: {
+          changes: changes,
+          _token: '{{ csrf_token() }}',
+        },
+        success: function(response) {
+          alert('在庫が更新されました');
+
+          Object.keys(changes).forEach(id => {
+        let stockInput = document.getElementById(`stock-${id}`);
+        let statusLabel = document.getElementById(`status-${id}`);
+        
+        if (!statusLabel) {
+          statusLabel = document.createElement('span');
+          statusLabel.id = `status-${id}`;
+          statusLabel.className = 'text-green-500 ml-2';
+          stockInput.parentElement.appendChild(statusLabel);
+        }
+        
+        statusLabel.textContent = '変更済み';
+      });
+      
+          Object.keys(changes).forEach(id => delete changes[id]); // 更新後に変更リストをクリア
+          location.reload(); 
+        },
+        error: function(xhr) {
+          alert('エラーが発生しました: ' + (xhr.responseJSON.message || '不明なエラー'));
+        }
+      });
+    });
+
+    function deleteInventory(inventoryId) {
+      if (!confirm('本当に削除しますか？')) return;
+
+      $.ajax({
+        type: 'DELETE',
+        url: '/inventory/' + inventoryId + '/delete',
+        data: {
+          _token: '{{ csrf_token() }}',
+        },
+        success: function(response) {
+          alert('在庫が削除されました');
+          $('#inventory-' + inventoryId).remove();
+        },
+        error: function(xhr) {
+          alert('エラーが発生しました: ' + xhr.responseJSON.message);
+        }
+      });
+    }
+    
+
 </script>
 
 
