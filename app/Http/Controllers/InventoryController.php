@@ -113,4 +113,16 @@ class InventoryController extends Controller
 
         return response()->json(['message' => '在庫が削除されました']);
     }
+
+    public function updateAll(Request $request)
+{
+    $updates = $request->input('changes', []);
+
+    foreach ($updates as $id => $stock) {
+        Inventory::where('id', $id)->update(['stock' => $stock]);
+    }
+
+    return response()->json(['message' => '在庫が更新されました']);
+}
+
 }
