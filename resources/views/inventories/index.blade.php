@@ -40,10 +40,13 @@
     </div>
   </div>
 
-  <div class="py-4">
+  <div class="pt-4 pb-16">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
       <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg lg:px-10">
         <div class="p-10 text-gray-900 dark:text-gray-100">
+          <div class="mt-4">
+            {{ $inventories->appends(request()->input())->links() }}
+          </div>
           @foreach ($inventories as $inventory)
             <div class="flex items-center my-3">
               <p class="w-1/2 text-lg font-semibold text-gray-800 dark:text-gray-300 mr-4">{{ $inventory->name }}</p>

@@ -20,7 +20,7 @@ class InventoryController extends Controller
     public function index(Request $request)
     {
         // GETリクエストの場合、食材一覧を返す
-        $inventories = auth()->user()->inventories;  // ログインユーザーの在庫を取得
+        $inventories = auth()->user()->inventories()->paginate(10);  // ログインユーザーの在庫を取得
         return view('inventories.index', [
             'inventories' => $inventories
         ]);
@@ -48,8 +48,8 @@ class InventoryController extends Controller
 
         // 食材が既に存在するかを確認
         $existingInventory = Inventory::where('name', $request->input('name'))
-                                      ->where('user_id', auth()->id())  // ログインユーザーの在庫か確認
-                                      ->first();
+            ->where('user_id', auth()->id())  // ログインユーザーの在庫か確認
+            ->first();
 
         if ($existingInventory) {
             // 既存の食材がある場合は在庫を追加する
@@ -115,14 +115,13 @@ class InventoryController extends Controller
     }
 
     public function updateAll(Request $request)
-{
-    $updates = $request->input('changes', []);
+    {
+        $updates = $request->input('changes', []);
 
-    foreach ($updates as $id => $stock) {
-        Inventory::where('id', $id)->update(['stock' => $stock]);
+        foreach ($updates as $id => $stock) {
+            Inventory::where('id', $id)->update(['stock' => $stock]);
+        }
+
+        return response()->json(['message' => '在庫が更新されました']);
     }
-
-    return response()->json(['message' => '在庫が更新されました']);
-}
-
 }
