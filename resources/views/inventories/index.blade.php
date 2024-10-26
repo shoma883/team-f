@@ -40,26 +40,28 @@
     </div>
   </div>
 
-  <div class="py-12">
+  <div class="py-4">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-      <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-        <div class="p-6 text-gray-900 dark:text-gray-100">
-          <div class="mb-4 p-4 bg-gray-100 dark:bg-gray-700 rounded-lg" id="inventory-list">
-            @foreach ($inventories as $inventory)
-              <div class="flex items-center mb-2">
-                <p class="text-gray-800 dark:text-gray-300 mr-4">{{ $inventory->name }}</p>
+      <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg lg:px-10">
+        <div class="p-10 text-gray-900 dark:text-gray-100">
+          @foreach ($inventories as $inventory)
+            <div class="flex items-center my-3">
+              <p class="w-1/2 text-lg font-semibold text-gray-800 dark:text-gray-300 mr-4">{{ $inventory->name }}</p>
+              <div>
                 <button class="bg-green-500 hover:bg-green-700 text-brack font-bold py-1 px-2 rounded"
                   onclick="changeStock({{ $inventory->id }}, 1)">＋</button>
                 <input type="number" id="stock-{{ $inventory->id }}" name="stock[{{ $inventory->id }}]"
-                  value="{{ $inventory->stock }}" required class="border rounded px-3 py-3 w-12 mx-3" readonly>
+                  value="{{ $inventory->stock }}" required class="border rounded text-right px-3 py-3 w-20 mx-3"
+                  readonly>
                 <button class="bg-red-500 hover:bg-red-700 text-brack font-bold py-1 px-2 rounded"
                   onclick="changeStock({{ $inventory->id }}, -1)">－</button>
-                <button class="ml-4 bg-blue-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded"
-                  onclick="deleteInventory({{ $inventory->id }})">削除</button>
-                <span id="status-{{ $inventory->id }}"></span>
               </div>
-            @endforeach
-          </div>
+              <button class="bg-blue-500 hover:bg-red-700 text-white font-bold py-1 px-3 ml-20 rounded"
+                onclick="deleteInventory({{ $inventory->id }})">削除</button>
+              <span id="status-{{ $inventory->id }}" class="ml-20"></span>
+            </div>
+            <hr class="opacity-30">
+          @endforeach
           <button id="update-all"
             class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">更新</button>
         </div>
@@ -71,6 +73,16 @@
 
   <script>
     const changes = {};
+
+    const updateButtonStatus = () => {
+      const updateAllButton = document.getElementById('update-all');
+      if ((Object.keys(changes)).length === 0) {
+        updateAllButton.classList.add('hidden');
+      } else {
+        updateAllButton.classList.remove('hidden');
+      }
+    }
+    updateButtonStatus();
 
     function changeStock(inventoryId, change) {
       const stockInput = document.getElementById(`stock-${inventoryId}`);
@@ -88,8 +100,11 @@
         statusLabel.className = 'changed';
         stockInput.parentElement.appendChild(statusLabel);
       }
-      statusLabel.textContent = '変更済み';
+      statusLabel.textContent = '変更あり';
+
+      updateButtonStatus();
     }
+
     $('#update-all').on('click', function() {
       if (Object.keys(changes).length === 0) {
         alert('変更がありません。');
