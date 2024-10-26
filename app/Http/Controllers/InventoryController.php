@@ -20,7 +20,7 @@ class InventoryController extends Controller
     public function index(Request $request)
     {
         // GETリクエストの場合、食材一覧を返す
-        $inventories = auth()->user()->inventories()->paginate(10);  // ログインユーザーの在庫を取得
+        $inventories = auth()->user()->inventories()->latest()->paginate(10);  // ログインユーザーの在庫を取得
         return view('inventories.index', [
             'inventories' => $inventories
         ]);
@@ -65,7 +65,7 @@ class InventoryController extends Controller
                 'user_id' => auth()->id(),
             ]);
 
-            return redirect()->back()->with('success', '新しい食材が追加されました。');
+            return redirect()->route("inventories.index")->with('success', '新しい食材が追加されました。');
         }
     }
 
@@ -99,7 +99,6 @@ class InventoryController extends Controller
         $inventory->save();
 
         return response()->json(['success' => '在庫が更新されました。']);
-        // 更新用の処理
     }
 
     /**

@@ -162,6 +162,7 @@
         success: function(response) {
           alert('在庫が削除されました');
           $('#inventory-' + inventoryId).remove();
+          location.reload();
         },
         error: function(xhr) {
           alert('エラーが発生しました: ' + xhr.responseJSON.message);
